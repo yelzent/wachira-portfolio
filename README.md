@@ -30,3 +30,7 @@ git add -A
 git commit -m "Add local gallery images v10"
 git push
 ```
+
+
+## V11
+Adaptive Desktop / Tablet / Phone layout and frame-engine performance profiles. See `V11_CHANGELOG.md`.
