@@ -6,7 +6,7 @@
 <meta name="referrer" content="no-referrer">
 <meta name="theme-color" content="#f7fbff">
 <meta name="portfolio-version" content="13-performance-rebuild-imagebitmap">
-  <title>Wachira Uthawang — Interactive Teacher Portfolio v13</title>
+  <title>Wachira Uthawang — Teacher Portfolio 2026</title>
 <meta name="description" content="Interactive Teacher Portfolio — Wachira Uthawang">
 <link rel="stylesheet" href="styles.css">
 
@@ -34,85 +34,85 @@
 </style>
 </head>
 <body class="motion-loading">
-<div class="motion-boot" id="motionBoot" aria-live="polite" aria-label="กำลังเตรียมภาพเคลื่อนไหว">
+<div class="motion-boot" id="motionBoot" aria-live="polite" aria-label="กำลังเตรียมเว็บไซต์">
   <div class="motion-boot-box">
     <div class="motion-boot-mark">WU</div>
-    <div class="motion-boot-title">Preparing interactive portfolio</div>
-    <div class="motion-boot-sub">กำลังเตรียมชุด Motion ที่ปรับขนาดให้เหมาะกับอุปกรณ์<br>รูปผลงานและเอกสารจะโหลดภายหลังตามตำแหน่งที่เปิดดู</div>
+    <div class="motion-boot-title">กำลังเตรียมเว็บไซต์</div>
+    <div class="motion-boot-sub">กรุณารอสักครู่ เพื่อให้การแสดงผลเป็นไปอย่างราบรื่น<br>เมื่อพร้อมแล้ว ระบบจะพาเข้าสู่แฟ้มผลงานโดยอัตโนมัติ</div>
     <div class="motion-boot-track"><i id="motionBootBar"></i></div>
-    <div class="motion-boot-row"><span class="motion-boot-status" id="motionBootStatus">Preparing motion…</span><span class="motion-boot-percent" id="motionBootPercent">0%</span></div>
-    <div class="motion-boot-scenes"><span id="bootIntro">INTRO</span><span id="bootReturn">RETURN</span><span id="bootClosing">CLOSING</span></div>
-    <button type="button" class="motion-boot-skip" id="motionBootSkip">เข้าสู่เว็บไซต์ก่อน</button>
+    <div class="motion-boot-row"><span class="motion-boot-status" id="motionBootStatus">กำลังเตรียมระบบ กรุณารอสักครู่</span><span class="motion-boot-percent" id="motionBootPercent">0%</span></div>
+    <div class="motion-boot-scenes"><span id="bootIntro">ส่วนเริ่มต้น</span><span id="bootReturn">ช่วงเนื้อหา</span><span id="bootClosing">ส่วนท้าย</span></div>
+    <button type="button" class="motion-boot-skip" id="motionBootSkip">เข้าสู่เว็บไซต์ตอนนี้</button>
   </div>
 </div>
 
 <div class="progress-line" id="progressLine"></div>
 <header class="topbar">
-  <a class="brand" href="#experience"><span class="brand-badge">WU</span><span><strong>WACHIRA UTHAWANG</strong><small>INTERACTIVE TEACHER PORTFOLIO · V13</small></span></a>
-  <nav class="nav-actions" aria-label="เมนูหลัก"><a class="nav-chip" href="#hub">MENU</a><button type="button" class="nav-chip" id="openAllGallery">PHOTO ARCHIVE</button></nav>
+  <a class="brand" href="#experience"><span class="brand-badge">WU</span><span><strong>WACHIRA UTHAWANG</strong><small>TEACHER PORTFOLIO · 2026</small></span></a>
+  <nav class="nav-actions" aria-label="เมนูหลัก"><a class="nav-chip" href="#hub">เมนู</a><button type="button" class="nav-chip" id="openAllGallery">คลังภาพ</button></nav>
 </header>
-<nav class="section-dock" aria-label="Portfolio sections">
-  <a href="#about" data-label="Professional Profile">01</a>
-  <a href="#teaching" data-label="Teaching & Performance">02</a>
-  <a href="#systems" data-label="Digital Systems">03</a>
-  <a href="#professional" data-label="Professional Development">04</a>
-  <a href="#community" data-label="Activities & Community">05</a>
+<nav class="section-dock" aria-label="หมวดผลงาน">
+  <a href="#about" data-label="ข้อมูลวิชาชีพ">01</a>
+  <a href="#teaching" data-label="การสอนและผลงาน">02</a>
+  <a href="#systems" data-label="ระบบดิจิทัล">03</a>
+  <a href="#professional" data-label="การพัฒนาวิชาชีพ">04</a>
+  <a href="#community" data-label="กิจกรรมและชุมชน">05</a>
 </nav>
 
 <!-- 01+02: Intro + Walk out + Reveal — one continuous frame sequence -->
 <section class="frame-experience intro-experience" id="experience" data-frame-scene="intro" data-hold="0.86" data-shift="-0.035">
   <div class="frame-stage">
-    <canvas class="scene-canvas" aria-label="ตัวละครเคลื่อนไหวตามการ Scroll"></canvas>
+    <canvas class="scene-canvas" aria-label="ภาพเคลื่อนไหวประกอบการนำเสนอ"></canvas>
     <div class="frame-wash"></div>
     <div class="scene-copy right intro-copy">
-      <div class="eyebrow">Teacher Portfolio 2026 · Computer Education</div>
+      <div class="eyebrow">แฟ้มสะสมผลงานครู 2026 · คอมพิวเตอร์ศึกษา</div>
       <h1 class="display">WACHIRA<br><span>UTHAWANG</span></h1>
       <p>ครูคอมพิวเตอร์ศึกษา · เทคโนโลยีการศึกษา · ระบบดิจิทัลเพื่อการเรียนรู้</p>
-      <div class="scroll-cue">VIEW PORTFOLIO</div>
+      <div class="scroll-cue">เลื่อนเพื่อชมผลงาน</div>
     </div>
     <div class="reveal-menu" id="revealMenu">
-      <div class="reveal-title">PORTFOLIO SECTIONS</div>
-      <a class="reveal-card" href="#about"><span class="num">01</span><span><strong>ข้อมูลวิชาชีพ</strong><small>Profile · Education · Experience</small></span><span class="arrow">↗</span></a>
-      <a class="reveal-card" href="#teaching"><span class="num">02</span><span><strong>การสอนและผลงาน</strong><small>Teaching · Performance · Student Work</small></span><span class="arrow">↗</span></a>
-      <a class="reveal-card" href="#systems"><span class="num">03</span><span><strong>Digital Systems</strong><small>Web Apps · AI · School Systems</small></span><span class="arrow">↗</span></a>
-      <a class="reveal-card" href="#professional"><span class="num">04</span><span><strong>การพัฒนาวิชาชีพ</strong><small>Development · Recognition · Certificates</small></span><span class="arrow">↗</span></a>
-      <a class="reveal-card" href="#community"><span class="num">05</span><span><strong>กิจกรรมและชุมชน</strong><small>Student · School · Community</small></span><span class="arrow">↗</span></a>
+      <div class="reveal-title">เลือกดูผลงาน</div>
+      <a class="reveal-card" href="#about"><span class="num">01</span><span><strong>ข้อมูลวิชาชีพ</strong><small>ประวัติ · การศึกษา · ประสบการณ์</small></span><span class="arrow">↗</span></a>
+      <a class="reveal-card" href="#teaching"><span class="num">02</span><span><strong>การสอนและผลงาน</strong><small>การสอน · ผลงาน · ผลงานนักเรียน</small></span><span class="arrow">↗</span></a>
+      <a class="reveal-card" href="#systems"><span class="num">03</span><span><strong>ระบบดิจิทัล</strong><small>Web App · AI · ระบบเพื่อการศึกษา</small></span><span class="arrow">↗</span></a>
+      <a class="reveal-card" href="#professional"><span class="num">04</span><span><strong>การพัฒนาวิชาชีพ</strong><small>การพัฒนา · รางวัล · เกียรติบัตร</small></span><span class="arrow">↗</span></a>
+      <a class="reveal-card" href="#community"><span class="num">05</span><span><strong>กิจกรรมและชุมชน</strong><small>ผู้เรียน · โรงเรียน · ชุมชน</small></span><span class="arrow">↗</span></a>
     </div>
-    <div class="frame-hint">Scroll to interact</div>
+    <div class="frame-hint">เลื่อนเพื่อชมต่อ</div>
     <div class="scene-local-progress"><i></i></div>
-    <div class="frame-status">FRAME SEQUENCE · VIDEO 01 → 02</div>
+    <div class="frame-status">แฟ้มสะสมผลงานครู · 2026</div>
   </div>
 </section>
 
 <!-- Portfolio overview -->
 <section class="content-section hub" id="hub">
   <div class="section-head">
-    <div><div class="section-index">PORTFOLIO OVERVIEW</div><h2 class="section-title">ขอบเขต<br><span>ผลงานวิชาชีพ</span></h2></div>
+    <div><div class="section-index">ภาพรวมผลงาน</div><h2 class="section-title">ขอบเขต<br><span>ผลงานวิชาชีพ</span></h2></div>
     <p class="section-lead">เลือกดูข้อมูลวิชาชีพ การจัดการเรียนรู้ ระบบดิจิทัล การพัฒนาวิชาชีพ และกิจกรรมเพื่อผู้เรียน/ชุมชน พร้อมเอกสารและภาพจากการปฏิบัติงานจริง</p>
   </div>
   <div class="hub-grid">
-    <a href="#about" class="hub-card" data-num="01" data-hub-image="34"><div class="hub-media"></div><h3>PROFESSIONAL<br>PROFILE</h3><p>ประวัติ · การศึกษา · ใบอนุญาต · ประสบการณ์</p><span class="hub-go">VIEW →</span></a>
-    <a href="#teaching" class="hub-card" data-num="02" data-hub-image="115"><div class="hub-media"></div><h3>TEACHING &<br>PERFORMANCE</h3><p>การจัดการเรียนรู้ · ผลงานนักเรียน · โครงงาน</p><span class="hub-go">VIEW →</span></a>
-    <a href="#systems" class="hub-card" data-num="03" data-hub-image="157"><div class="hub-media"></div><h3>DIGITAL<br>SYSTEMS</h3><p>Web App · Data · AI · Google Apps Script</p><span class="hub-go">VIEW →</span></a>
-    <a href="#professional" class="hub-card" data-num="04" data-hub-image="145"><div class="hub-media"></div><h3>PROFESSIONAL<br>GROWTH</h3><p>อบรม · วิทยากร · เครือข่าย · รางวัล</p><span class="hub-go">VIEW →</span></a>
-    <a href="#community" class="hub-card" data-num="05" data-hub-image="108"><div class="hub-media"></div><h3>PEOPLE &<br>COMMUNITY</h3><p>ผู้เรียน · โรงเรียน · ครอบครัว · ชุมชน</p><span class="hub-go">VIEW →</span></a>
+    <a href="#about" class="hub-card" data-num="01" data-hub-image="34"><div class="hub-media"></div><h3>PROFESSIONAL<br>PROFILE</h3><p>ประวัติ · การศึกษา · ใบอนุญาต · ประสบการณ์</p><span class="hub-go">ดูรายละเอียด →</span></a>
+    <a href="#teaching" class="hub-card" data-num="02" data-hub-image="115"><div class="hub-media"></div><h3>TEACHING &<br>PERFORMANCE</h3><p>การจัดการเรียนรู้ · ผลงานนักเรียน · โครงงาน</p><span class="hub-go">ดูรายละเอียด →</span></a>
+    <a href="#systems" class="hub-card" data-num="03" data-hub-image="157"><div class="hub-media"></div><h3>DIGITAL<br>SYSTEMS</h3><p>Web App · Data · AI · Google Apps Script</p><span class="hub-go">ดูรายละเอียด →</span></a>
+    <a href="#professional" class="hub-card" data-num="04" data-hub-image="145"><div class="hub-media"></div><h3>PROFESSIONAL<br>GROWTH</h3><p>อบรม · วิทยากร · เครือข่าย · รางวัล</p><span class="hub-go">ดูรายละเอียด →</span></a>
+    <a href="#community" class="hub-card" data-num="05" data-hub-image="108"><div class="hub-media"></div><h3>PEOPLE &<br>COMMUNITY</h3><p>ผู้เรียน · โรงเรียน · ครอบครัว · ชุมชน</p><span class="hub-go">ดูรายละเอียด →</span></a>
   </div>
 </section>
 
 <!-- Professional profile -->
 <section class="content-section soft" id="about">
   <div class="section-head">
-    <div><div class="section-index">01 · PROFESSIONAL PROFILE</div><h2 class="section-title">ABOUT<br><span>ME</span></h2></div>
+    <div><div class="section-index">01 · ข้อมูลวิชาชีพ</div><h2 class="section-title">ABOUT<br><span>ME</span></h2></div>
     <div class="section-lead">วชิระ อุตวงศ์ — ครูคอมพิวเตอร์ศึกษา ปฏิบัติงานด้านการจัดการเรียนรู้ เทคโนโลยีการศึกษา และการพัฒนาระบบดิจิทัลเพื่อสนับสนุนงานครูและผู้เรียน</div>
   </div>
   <div class="profile-facts">
-    <div class="profile-fact"><small>ACADEMIC BACKGROUND</small><strong>ครุศาสตรบัณฑิต</strong><span>สาขาวิชาคอมพิวเตอร์ศึกษา มหาวิทยาลัยราชภัฏเชียงใหม่</span></div>
-    <div class="profile-fact"><small>PROFESSIONAL LICENSE</small><strong>ใบอนุญาตประกอบวิชาชีพครู</strong><span>ใบอนุญาตวิชาชีพครูขั้นต้น</span></div>
-    <div class="profile-fact"><small>EXPERIENCE</small><strong>ประสบการณ์ในสถานศึกษาหลายบริบท</strong><span>การสอน การดูแลผู้เรียน และการประยุกต์เทคโนโลยี</span></div>
-    <div class="profile-fact"><small>CURRENT FOCUS</small><strong>Digital Learning & Systems</strong><span>Web App · Data · AI · Workflow</span></div>
+    <div class="profile-fact"><small>วุฒิการศึกษา</small><strong>ครุศาสตรบัณฑิต</strong><span>สาขาวิชาคอมพิวเตอร์ศึกษา มหาวิทยาลัยราชภัฏเชียงใหม่</span></div>
+    <div class="profile-fact"><small>ใบอนุญาตวิชาชีพ</small><strong>ใบอนุญาตประกอบวิชาชีพครู</strong><span>ใบอนุญาตวิชาชีพครูขั้นต้น</span></div>
+    <div class="profile-fact"><small>ประสบการณ์</small><strong>ประสบการณ์ในสถานศึกษาหลายบริบท</strong><span>การสอน การดูแลผู้เรียน และการประยุกต์เทคโนโลยี</span></div>
+    <div class="profile-fact"><small>งานที่ให้ความสำคัญ</small><strong>Digital Learning & Systems</strong><span>Web App · Data · AI · Workflow</span></div>
   </div>
   <div class="content-strip-wrap">
-    <div class="content-strip-head"><div><h3>เอกสารและภาพที่เกี่ยวข้อง</h3><small>กดเพื่อเปิดอ่าน · ปัดซ้าย/ขวาใน Viewer</small></div><div class="content-strip-nav"><button type="button" data-strip-prev aria-label="เลื่อนย้อนกลับ">←</button><button type="button" data-strip-next aria-label="เลื่อนไปข้างหน้า">→</button></div></div>
+    <div class="content-strip-head"><div><h3>เอกสารและภาพที่เกี่ยวข้อง</h3><small>กดหรือแตะภาพเพื่อดูรายละเอียด · ปัดซ้าย–ขวาเพื่อดูภาพถัดไป</small></div><div class="content-strip-nav"><button type="button" data-strip-prev aria-label="เลื่อนย้อนกลับ">←</button><button type="button" data-strip-next aria-label="เลื่อนไปข้างหน้า">→</button></div></div>
     <div class="content-strip" id="aboutStrip"></div>
   </div>
   <div class="section-actions"><button type="button" class="gallery-button" data-gallery="about">เปิดคลังภาพ</button></div>
@@ -121,11 +121,11 @@
 <!-- Teaching & performance -->
 <section class="content-section" id="teaching">
   <div class="section-head">
-    <div><div class="section-index">02 · TEACHING & PERFORMANCE</div><h2 class="section-title">การสอน<br><span>และผลงาน</span></h2></div>
+    <div><div class="section-index">02 · การสอนและผลงาน</div><h2 class="section-title">การสอน<br><span>และผลงาน</span></h2></div>
     <div class="section-lead">หลักฐานการจัดการเรียนรู้ ผลงานนักเรียน โครงงาน การแข่งขัน สื่อดิจิทัล และกิจกรรมพัฒนาทักษะที่เกิดจากการปฏิบัติงานจริง</div>
   </div>
   <div class="content-strip-wrap">
-    <div class="content-strip-head"><div><h3>ผลงานและหลักฐานการจัดการเรียนรู้</h3><small>กดเพื่อเปิดอ่าน · ปัดซ้าย/ขวา</small></div><div class="content-strip-nav"><button type="button" data-strip-prev aria-label="เลื่อนย้อนกลับ">←</button><button type="button" data-strip-next aria-label="เลื่อนไปข้างหน้า">→</button></div></div>
+    <div class="content-strip-head"><div><h3>ผลงานและหลักฐานการจัดการเรียนรู้</h3><small>กดหรือแตะภาพเพื่อดูรายละเอียด · ปัดซ้าย–ขวาเพื่อดูภาพถัดไป</small></div><div class="content-strip-nav"><button type="button" data-strip-prev aria-label="เลื่อนย้อนกลับ">←</button><button type="button" data-strip-next aria-label="เลื่อนไปข้างหน้า">→</button></div></div>
     <div class="content-strip" id="teachingStrip"></div>
   </div>
   <div class="section-actions"><button type="button" class="gallery-button" data-gallery="teaching">เปิดคลังภาพ</button></div>
@@ -137,43 +137,43 @@
     <canvas class="scene-canvas" aria-label="ตัวละครกลับเข้าสู่ฉาก"></canvas>
     <div class="frame-wash"></div>
     <div class="scene-copy return-copy">
-      <div class="eyebrow">03 · DIGITAL SYSTEMS & INNOVATION</div>
+      <div class="eyebrow">03 · ระบบดิจิทัลและนวัตกรรม</div>
       <h2 class="display">DIGITAL<br><span>SYSTEMS</span></h2>
       <p>Educational Web Applications · Google Apps Script · Google Sheets · AI-assisted Workflow</p>
     </div>
-    <div class="frame-hint">View digital systems</div>
+    <div class="frame-hint">เลื่อนเพื่อดูผลงานระบบดิจิทัล</div>
     <div class="scene-local-progress"><i></i></div>
-    <div class="frame-status">FRAME SEQUENCE · VIDEO 03</div>
+    <div class="frame-status">ระบบดิจิทัลเพื่อการศึกษา</div>
   </div>
 </section>
 
 <!-- Digital systems -->
 <section class="content-section dark" id="systems">
   <div class="section-head">
-    <div><div class="section-index">03 · DIGITAL SYSTEMS</div><h2 class="section-title">DIGITAL<br><span>SYSTEMS</span></h2></div>
+    <div><div class="section-index">03 · ระบบดิจิทัล</div><h2 class="section-title">DIGITAL<br><span>SYSTEMS</span></h2></div>
     <div class="section-lead">ตัวอย่างระบบที่พัฒนาจากโจทย์การใช้งานจริงในสถานศึกษา โดยเชื่อม Google Apps Script, Google Sheets และ Web Application เพื่อจัดการงานเรียนรู้และข้อมูลผู้เรียน</div>
   </div>
   <div class="system-duo">
     <article class="system-showcase-card">
       <div class="system-shot"><img id="secondarySystemImage" alt="ระบบมัธยมศึกษา" loading="lazy"></div>
-      <div class="system-copy"><small>SYSTEM 01 · SECONDARY LEVEL</small><h3>ระบบส่งงานนักเรียน CMW</h3><p>ระบบสำหรับบริหารการส่งงาน ตรวจงาน ให้คะแนน และติดตามผลการส่งงานในระดับมัธยมศึกษา</p><a class="system-live" href="https://script.google.com/macros/s/AKfycbxhgDL6Fccukm_3X2zGUolE4aCNxv7PLbvKbqkbFQecrdU88mfzzxq7x-qcc94YkdbGAg/exec" target="_blank" rel="noopener"><span>เปิดระบบจริง</span><b>↗</b></a></div>
+      <div class="system-copy"><small>ระบบที่ 01 · ระดับมัธยมศึกษา</small><h3>ระบบส่งงานนักเรียน CMW</h3><p>ระบบสำหรับบริหารการส่งงาน ตรวจงาน ให้คะแนน และติดตามผลการส่งงานในระดับมัธยมศึกษา</p><a class="system-live" href="https://script.google.com/macros/s/AKfycbxhgDL6Fccukm_3X2zGUolE4aCNxv7PLbvKbqkbFQecrdU88mfzzxq7x-qcc94YkdbGAg/exec" target="_blank" rel="noopener"><span>เปิดระบบจริง</span><b>↗</b></a></div>
     </article>
     <article class="system-showcase-card">
       <div class="system-shot"><img id="primarySystemImage" alt="ระบบประถมศึกษา" loading="lazy"></div>
-      <div class="system-copy"><small>SYSTEM 02 · PRIMARY LEVEL</small><h3>ระบบเช็คชื่อและคะแนน</h3><p>ระบบสำหรับเช็คชื่อ บันทึกคะแนน ติดตามผู้เรียน และจัดการข้อมูลชั้นเรียนระดับประถมศึกษา</p><a class="system-live" href="https://script.google.com/macros/s/AKfycbxlRqLWNuTheAZTod-rxw9NX8ivJwfNWCZMN_svZ7RU33I6qL0eNfnZ57fCYj64-XTE/exec" target="_blank" rel="noopener"><span>เปิดระบบจริง</span><b>↗</b></a></div>
+      <div class="system-copy"><small>ระบบที่ 02 · ระดับประถมศึกษา</small><h3>ระบบเช็คชื่อและคะแนน</h3><p>ระบบสำหรับเช็คชื่อ บันทึกคะแนน ติดตามผู้เรียน และจัดการข้อมูลชั้นเรียนระดับประถมศึกษา</p><a class="system-live" href="https://script.google.com/macros/s/AKfycbxlRqLWNuTheAZTod-rxw9NX8ivJwfNWCZMN_svZ7RU33I6qL0eNfnZ57fCYj64-XTE/exec" target="_blank" rel="noopener"><span>เปิดระบบจริง</span><b>↗</b></a></div>
     </article>
   </div>
-  <div class="section-actions"><button type="button" class="gallery-button" data-gallery="systems">เปิดคลังภาพระบบ / AI / Coding</button></div>
+  <div class="section-actions"><button type="button" class="gallery-button" data-gallery="systems">ดูภาพผลงานระบบและเทคโนโลยี</button></div>
 </section>
 
 <!-- Professional development -->
 <section class="content-section soft" id="professional">
   <div class="section-head">
-    <div><div class="section-index">04 · PROFESSIONAL GROWTH</div><h2 class="section-title">PROFESSIONAL<br><span>GROWTH</span></h2></div>
+    <div><div class="section-index">04 · การพัฒนาวิชาชีพ</div><h2 class="section-title">PROFESSIONAL<br><span>GROWTH</span></h2></div>
     <div class="section-lead">การอบรม การเป็นวิทยากร การทำงานร่วมกับเครือข่ายวิชาชีพ ผลงาน รางวัล และเกียรติบัตรที่สะท้อนการพัฒนาตนเองอย่างต่อเนื่อง</div>
   </div>
   <div class="content-strip-wrap">
-    <div class="content-strip-head"><div><h3>การพัฒนาและผลงานวิชาชีพ</h3><small>กดเพื่อเปิดอ่าน · ปัดซ้าย/ขวา</small></div><div class="content-strip-nav"><button type="button" data-strip-prev aria-label="เลื่อนย้อนกลับ">←</button><button type="button" data-strip-next aria-label="เลื่อนไปข้างหน้า">→</button></div></div>
+    <div class="content-strip-head"><div><h3>การพัฒนาและผลงานวิชาชีพ</h3><small>กดหรือแตะภาพเพื่อดูรายละเอียด · ปัดซ้าย–ขวาเพื่อดูภาพถัดไป</small></div><div class="content-strip-nav"><button type="button" data-strip-prev aria-label="เลื่อนย้อนกลับ">←</button><button type="button" data-strip-next aria-label="เลื่อนไปข้างหน้า">→</button></div></div>
     <div class="content-strip" id="professionalStrip"></div>
   </div>
   <div class="section-actions"><button type="button" class="gallery-button" data-gallery="professional">เปิดคลังภาพและเกียรติบัตร</button></div>
@@ -182,11 +182,11 @@
 <!-- Activities & community -->
 <section class="content-section" id="community">
   <div class="section-head">
-    <div><div class="section-index">05 · PEOPLE & COMMUNITY</div><h2 class="section-title">PEOPLE &<br><span>COMMUNITY</span></h2></div>
+    <div><div class="section-index">05 · กิจกรรมและชุมชน</div><h2 class="section-title">PEOPLE &<br><span>COMMUNITY</span></h2></div>
     <div class="section-lead">กิจกรรมที่เกี่ยวข้องกับผู้เรียน โรงเรียน ครอบครัว และชุมชน ครอบคลุมการเยี่ยมบ้าน ลูกเสือ จิตอาสา การประสานงาน และการพัฒนาผู้เรียน</div>
   </div>
   <div class="content-strip-wrap">
-    <div class="content-strip-head"><div><h3>กิจกรรมและการมีส่วนร่วม</h3><small>กดเพื่อเปิดอ่าน · ปัดซ้าย/ขวา</small></div><div class="content-strip-nav"><button type="button" data-strip-prev aria-label="เลื่อนย้อนกลับ">←</button><button type="button" data-strip-next aria-label="เลื่อนไปข้างหน้า">→</button></div></div>
+    <div class="content-strip-head"><div><h3>กิจกรรมและการมีส่วนร่วม</h3><small>กดหรือแตะภาพเพื่อดูรายละเอียด · ปัดซ้าย–ขวาเพื่อดูภาพถัดไป</small></div><div class="content-strip-nav"><button type="button" data-strip-prev aria-label="เลื่อนย้อนกลับ">←</button><button type="button" data-strip-next aria-label="เลื่อนไปข้างหน้า">→</button></div></div>
     <div class="content-strip" id="communityStrip"></div>
   </div>
   <div class="section-actions"><button type="button" class="gallery-button" data-gallery="community">เปิดคลังภาพ</button></div>
@@ -198,23 +198,23 @@
     <canvas class="scene-canvas" aria-label="ฉากปิด Portfolio"></canvas>
     <div class="frame-wash"></div>
     <div class="closing-card" id="closingCard">
-      <div class="eyebrow">WACHIRA UTHAWANG · TEACHER PORTFOLIO 2026</div>
-      <h2>PORTFOLIO<br>CONTACT</h2>
-      <p>ครูคอมพิวเตอร์ศึกษา · Educational Technology · Digital Systems</p>
-      <div class="closing-links"><a href="#experience">กลับด้านบน</a><button type="button" class="nav-chip" id="openClosingPage">ดูหน้าปิด Portfolio</button><button type="button" class="nav-chip" data-gallery="all">คลังภาพทั้งหมด</button></div>
+      <div class="eyebrow">แฟ้มสะสมผลงานครู · วชิระ อุตวงศ์</div>
+      <h2>ข้อมูล<br>ติดต่อ</h2>
+      <p>ครูคอมพิวเตอร์ศึกษา · เทคโนโลยีการศึกษา · ระบบดิจิทัล</p>
+      <div class="closing-links"><a href="#experience">กลับด้านบน</a><button type="button" class="nav-chip" id="openClosingPage">ดูหน้าปิดแฟ้มผลงาน</button><button type="button" class="nav-chip" data-gallery="all">คลังภาพทั้งหมด</button></div>
     </div>
-    <div class="frame-hint">Portfolio contact</div>
+    <div class="frame-hint">ข้อมูลติดต่อและหน้าปิด</div>
     <div class="scene-local-progress"><i></i></div>
-    <div class="frame-status">FRAME SEQUENCE · VIDEO 04</div>
+    <div class="frame-status">ขอบคุณที่รับชม</div>
   </div>
 </section>
 
-<footer class="footer"><span>WACHIRA UTHAWANG · TEACHER PORTFOLIO 2026</span><span>LEARN · CREATE · DEVELOP · SHARE</span></footer>
+<footer class="footer"><span>WACHIRA UTHAWANG · TEACHER PORTFOLIO 2026</span><span>เรียนรู้ · สร้างสรรค์ · พัฒนา · แบ่งปัน</span></footer>
 
 <!-- Page viewer modal -->
-<div class="modal" id="pageModal" role="dialog" aria-modal="true" aria-labelledby="pageModalCaption" aria-hidden="true"><div class="modal-panel" tabindex="-1"><button type="button" class="modal-close" data-close aria-label="ปิดหน้าต่าง">×</button><div class="page-viewer" id="pageViewer"><img id="pageModalImg" alt="Portfolio preview"><div class="viewer-caption" id="pageModalCaption"></div><div class="viewer-counter" id="viewerCounter" aria-live="polite"></div><div class="viewer-nav"><button type="button" id="viewerPrev" aria-label="ก่อนหน้า">‹</button><button type="button" id="viewerNext" aria-label="ถัดไป">›</button></div></div></div></div>
+<div class="modal" id="pageModal" role="dialog" aria-modal="true" aria-labelledby="pageModalCaption" aria-hidden="true"><div class="modal-panel" tabindex="-1"><button type="button" class="modal-close" data-close aria-label="ปิดหน้าต่าง">×</button><div class="page-viewer" id="pageViewer"><img id="pageModalImg" alt="ภาพตัวอย่างผลงาน"><div class="viewer-caption" id="pageModalCaption"></div><div class="viewer-counter" id="viewerCounter" aria-live="polite"></div><div class="viewer-nav"><button type="button" id="viewerPrev" aria-label="ก่อนหน้า">‹</button><button type="button" id="viewerNext" aria-label="ถัดไป">›</button></div></div></div></div>
 <!-- Gallery modal -->
-<div class="modal" id="galleryModal" role="dialog" aria-modal="true" aria-labelledby="galleryTitle" aria-hidden="true"><div class="modal-panel" tabindex="-1"><button type="button" class="modal-close" data-close aria-label="ปิดหน้าต่าง">×</button><div class="gallery-panel"><div class="gallery-head"><div><div class="section-index">PHOTO ARCHIVE</div><h2 id="galleryTitle">คลังภาพ</h2></div><div class="gallery-count" id="galleryCount" aria-live="polite"></div></div><div class="gallery-filters" id="galleryFilters" aria-label="หมวดหมู่ภาพ"></div><div class="sheet-grid" id="sheetGrid"></div><div class="pager"><button type="button" id="prevPage">← ก่อนหน้า</button><button type="button" id="nextPage">ถัดไป →</button></div></div></div></div>
+<div class="modal" id="galleryModal" role="dialog" aria-modal="true" aria-labelledby="galleryTitle" aria-hidden="true"><div class="modal-panel" tabindex="-1"><button type="button" class="modal-close" data-close aria-label="ปิดหน้าต่าง">×</button><div class="gallery-panel"><div class="gallery-head"><div><div class="section-index">คลังภาพผลงาน</div><h2 id="galleryTitle">คลังภาพ</h2></div><div class="gallery-count" id="galleryCount" aria-live="polite"></div></div><div class="gallery-filters" id="galleryFilters" aria-label="หมวดหมู่ภาพ"></div><div class="sheet-grid" id="sheetGrid"></div><div class="pager"><button type="button" id="prevPage">← ก่อนหน้า</button><button type="button" id="nextPage">ถัดไป →</button></div></div></div></div>
 
 <script src="data/frame-manifest-v13.js"></script>
 <script src="data/sheet-images.js"></script>
@@ -454,10 +454,10 @@
     intro:document.getElementById('bootIntro'),return:document.getElementById('bootReturn'),closing:document.getElementById('bootClosing')
   };
   let skipRequested=false;
-  bootUI.skip?.addEventListener('click',()=>{skipRequested=true;releaseMotionBoot('กำลังโหลดต่อเบื้องหลัง…')});
+  bootUI.skip?.addEventListener('click',()=>{skipRequested=true;releaseMotionBoot('พร้อมเข้าสู่เว็บไซต์')});
   setTimeout(()=>bootUI.skip?.classList.add('show'),5000);
 
-  function releaseMotionBoot(message='Ready'){
+  function releaseMotionBoot(message='พร้อมใช้งาน'){
     if(motionReady)return;motionReady=true;
     if(bootUI.status)bootUI.status.textContent=message;
     if(bootUI.bar)bootUI.bar.style.transform='scaleX(1)';
@@ -487,24 +487,24 @@
     document.documentElement.classList.add('motion-preparing');
     const p=getDeviceProfile(),asset=p.asset;
     const groups=[
-      {key:'intro',total:Number(manifest[asset]?.intro||0),el:bootUI.intro,label:'Intro'},
-      {key:'return',total:Number(manifest[asset]?.return||0),el:bootUI.return,label:'Return'},
-      {key:'closing',total:Number(manifest[asset]?.closing||0),el:bootUI.closing,label:'Closing'}
+      {key:'intro',total:Number(manifest[asset]?.intro||0),el:bootUI.intro,label:'ส่วนเริ่มต้น'},
+      {key:'return',total:Number(manifest[asset]?.return||0),el:bootUI.return,label:'ช่วงเนื้อหา'},
+      {key:'closing',total:Number(manifest[asset]?.closing||0),el:bootUI.closing,label:'ส่วนท้าย'}
     ].filter(g=>g.total>0);
     const jobs=[];for(const g of groups)for(let n=1;n<=g.total;n++)jobs.push({g,n,url:motionUrl(asset,g.key,n)});
     const total=jobs.length;let index=0,done=0,failed=0;const groupDone=new Map(groups.map(g=>[g.key,0]));
     const update=job=>{
       done++;if(job){groupDone.set(job.g.key,(groupDone.get(job.g.key)||0)+1);if(groupDone.get(job.g.key)>=job.g.total)job.g.el?.classList.add('done')}
       const percent=Math.round(done/Math.max(1,total)*100);if(bootUI.bar)bootUI.bar.style.transform=`scaleX(${percent/100})`;if(bootUI.pct)bootUI.pct.textContent=`${percent}%`;
-      if(bootUI.status)bootUI.status.textContent=`${job?.g?.label||'Motion'} · ${done}/${total}${failed?` · retry ${failed}`:''}`;
+      if(bootUI.status)bootUI.status.textContent='กำลังเตรียมระบบ กรุณารอสักครู่';
     };
     const worker=async()=>{while(index<jobs.length&&!skipRequested){const job=jobs[index++],ok=await fetchFrameToHttpCache(job.url);if(!ok)failed++;update(job)}};
     await Promise.all(Array.from({length:Math.min(p.preloadConcurrent||4,total)},worker));
     if(skipRequested&&index<jobs.length){const background=async()=>{while(index<jobs.length){const job=jobs[index++];await fetchFrameToHttpCache(job.url)}};Promise.all([background(),background()]).catch(()=>{});return}
-    if(bootUI.status)bootUI.status.textContent=failed?`Network ready · ${failed} frame(s) retry on demand`:'Network ready · decoding key frames…';
-    await seedDecodedKeyframes();for(const g of groups)g.el?.classList.add('done');releaseMotionBoot(failed?'Ready · missing frames retry automatically':'Ready');
+    if(bootUI.status)bootUI.status.textContent='กำลังเตรียมการแสดงผล กรุณารอสักครู่';
+    await seedDecodedKeyframes();for(const g of groups)g.el?.classList.add('done');releaseMotionBoot('พร้อมเข้าสู่เว็บไซต์');
   }
-  preloadOptimizedMotion().catch(()=>releaseMotionBoot('Ready · motion continues loading'));
+  preloadOptimizedMotion().catch(()=>releaseMotionBoot('พร้อมเข้าสู่เว็บไซต์'));
 
   // Preview helpers for testing: ?preview=intro-name | intro-menu | return | closing
   const preview=new URLSearchParams(location.search).get('preview');
@@ -655,16 +655,16 @@
 
   // V5 editorial finishing: next-section links, restrained reveals, active section dock.
   const sectionMeta=[
-    ['about','Professional Profile','teaching','Teaching & Performance'],
-    ['teaching','Teaching & Performance','systems','Digital Systems & Innovation'],
-    ['systems','Digital Systems & Innovation','professional','Professional Development'],
-    ['professional','Professional Development','community','Activities & Community'],
-    ['community','Activities & Community','closing','Portfolio Contact']
+    ['about','ข้อมูลวิชาชีพ','teaching','การสอนและผลงาน'],
+    ['teaching','การสอนและผลงาน','systems','ระบบดิจิทัลและนวัตกรรม'],
+    ['systems','ระบบดิจิทัลและนวัตกรรม','professional','การพัฒนาวิชาชีพ'],
+    ['professional','การพัฒนาวิชาชีพ','community','กิจกรรมและชุมชน'],
+    ['community','กิจกรรมและชุมชน','closing','ข้อมูลติดต่อ']
   ];
   sectionMeta.forEach(([id,label,nextId,nextLabel])=>{
     const sec=document.getElementById(id); if(!sec)return;
     const next=document.createElement('div'); next.className='section-next';
-    next.innerHTML=`<small>${label}</small><a href="#${nextId}">NEXT · ${nextLabel}<i>→</i></a>`;
+    next.innerHTML=`<small>${label}</small><a href="#${nextId}">ถัดไป · ${nextLabel}<i>→</i></a>`;
     sec.appendChild(next);
   });
 
