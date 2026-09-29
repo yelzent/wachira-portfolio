@@ -1,0 +1,1 @@
+window.FRAME_MANIFEST = {"desktop":{"intro":299,"return":137,"closing":144,"v1":130,"hold":8,"v2":161,"v1EndInIntro":130,"v2StartInIntro":139},"mobile":{"intro":299,"return":137,"closing":144,"v1":130,"hold":8,"v2":161,"v1EndInIntro":130,"v2StartInIntro":139}};
