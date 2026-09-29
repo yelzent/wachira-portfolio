@@ -5,7 +5,8 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="referrer" content="no-referrer">
 <meta name="theme-color" content="#f7fbff">
-<title>Wachira Uthawang — Interactive Teacher Portfolio v6</title>
+<meta name="portfolio-version" content="10-local-gallery">
+  <title>Wachira Uthawang — Interactive Teacher Portfolio v6</title>
 <meta name="description" content="Interactive Teacher Portfolio — Wachira Uthawang">
 <style>
 :root{
@@ -528,7 +529,7 @@ body{background:#f6f9fc}
 <body>
 <div class="progress-line" id="progressLine"></div>
 <header class="topbar">
-  <a class="brand" href="#experience"><span class="brand-badge">WU</span><span><strong>WACHIRA UTHAWANG</strong><small>INTERACTIVE TEACHER PORTFOLIO</small></span></a>
+  <a class="brand" href="#experience"><span class="brand-badge">WU</span><span><strong>WACHIRA UTHAWANG</strong><small>INTERACTIVE TEACHER PORTFOLIO · V10</small></span></a>
   <nav class="nav-actions"><a class="nav-chip" href="#hub">MENU</a><button class="nav-chip" id="openAllGallery">PHOTO ARCHIVE</button></nav>
 </header>
 <nav class="section-dock" aria-label="Portfolio sections">
@@ -904,7 +905,16 @@ body{background:#f6f9fc}
     if(!viewerItems.length)return;
     viewerIndex=(viewerIndex+viewerItems.length)%viewerItems.length;
     const item=viewerItems[viewerIndex];
-    pageImg.src=item.src; pageCaption.textContent=item.caption||'';
+    if(item.external){
+      applyExternalImage(pageImg,item.external);
+    }else{
+      pageImg.onerror=null;
+      pageImg.removeAttribute('data-fallback-1');
+      pageImg.removeAttribute('data-fallback-2');
+      pageImg.removeAttribute('data-fallback-3');
+      pageImg.src=item.src;
+    }
+    pageCaption.textContent=item.caption||'';
     viewerCounter.textContent=viewerItems.length>1?`${viewerIndex+1} / ${viewerItems.length}`:'';
     document.getElementById('viewerPrev').style.visibility=viewerItems.length>1?'visible':'hidden';
     document.getElementById('viewerNext').style.visibility=viewerItems.length>1?'visible':'hidden';
@@ -925,11 +935,11 @@ body{background:#f6f9fc}
   const data=(window.PORTFOLIO_SHEET_IMAGES||[]).filter(x=>x.show);
   function externalImageAttrs(x,alt='',extra=''){
     if(!x)return `alt="${escapeHtml(alt)}" ${extra}`;
-    return `src="${x.url}" data-fallback-1="${x.altUrl||''}" data-fallback-2="${x.fallbackUrl||''}" data-fallback-stage="0" referrerpolicy="no-referrer" alt="${escapeHtml(alt||x.title||'')}" ${extra}`;
+    return `src="${encodeURI(x.url)}" data-fallback-1="${x.altUrl||''}" data-fallback-2="${x.fallbackUrl||''}" data-fallback-3="${x.fallbackUrl2||''}" data-fallback-stage="0" referrerpolicy="no-referrer" alt="${escapeHtml(alt||x.title||'')}" ${extra}`;
   }
   window.portfolioImageFallback=function(img){
     const stage=Number(img.dataset.fallbackStage||0);
-    const next=stage===0?img.dataset.fallback1:stage===1?img.dataset.fallback2:'';
+    const next=stage===0?img.dataset.fallback1:stage===1?img.dataset.fallback2:stage===2?img.dataset.fallback3:'';
     if(next){
       img.dataset.fallbackStage=String(stage+1);
       img.src=next;
@@ -941,9 +951,10 @@ body{background:#f6f9fc}
   };
   function applyExternalImage(img,x){
     if(!img||!x)return;
-    img.src=x.url;
+    img.src=encodeURI(x.url);
     img.dataset.fallback1=x.altUrl||'';
     img.dataset.fallback2=x.fallbackUrl||'';
+    img.dataset.fallback3=x.fallbackUrl2||'';
     img.dataset.fallbackStage='0';
     img.referrerPolicy='no-referrer';
     img.onerror=()=>window.portfolioImageFallback(img);
