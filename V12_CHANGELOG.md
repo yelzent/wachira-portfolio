@@ -28,3 +28,12 @@
 - Tablet: 768×1024 and 1024×768
 - Desktop: 1440×900
 - Verified no document-level horizontal overflow and no console errors.
+
+## Smooth scroll rendering
+
+- Replaced distance-based frame jumps with time-based easing and capped catch-up steps.
+- Removed two-frame skipping on phones and increased directional frame preloading.
+- Increased decoded-frame caches while lowering canvas DPR to reduce per-frame paint cost.
+- Prevented late image promises from drawing stale frame targets.
+- Moved global and scene progress indicators from layout-changing width updates to GPU-friendly transforms.
+- Disabled expensive backdrop blur effects on phones while motion scenes are active.

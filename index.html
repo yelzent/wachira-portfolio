@@ -190,18 +190,18 @@
   const globalProgress=document.getElementById('progressLine');
   const manifest=window.FRAME_MANIFEST||{};
 
-  // V11: explicit adaptive profiles for Desktop / Tablet / Phone.
+  // V12: smooth, time-based frame profiles for Desktop / Tablet / Phone.
   function getDeviceProfile(){
     const w=window.innerWidth||document.documentElement.clientWidth||1200;
     const portrait=(window.innerHeight||0)>w;
     const dpr=window.devicePixelRatio||1;
     if(w<=767){
-      return {name:'phone',asset:'mobile',dpr:Math.min(dpr,1.25),cache:10,concurrent:2,ahead:3,behind:1,stride:2,follow:.52,smoothing:'medium',activeBefore:.18,activeAfter:.95};
+      return {name:'phone',asset:'mobile',dpr:Math.min(dpr,1),cache:32,concurrent:4,ahead:10,behind:5,stride:1,response:.28,maxStep:9,smoothing:'medium',activeBefore:.28,activeAfter:1.05};
     }
     if(w<=1199){
-      return {name:'tablet',asset:portrait?'mobile':'desktop',dpr:Math.min(dpr,1.45),cache:16,concurrent:3,ahead:4,behind:2,stride:1,follow:.40,smoothing:'high',activeBefore:.28,activeAfter:1.15};
+      return {name:'tablet',asset:portrait?'mobile':'desktop',dpr:Math.min(dpr,1.2),cache:40,concurrent:5,ahead:12,behind:6,stride:1,response:.25,maxStep:12,smoothing:'medium',activeBefore:.4,activeAfter:1.25};
     }
-    return {name:'desktop',asset:'desktop',dpr:Math.min(dpr,1.85),cache:24,concurrent:4,ahead:5,behind:3,stride:1,follow:.32,smoothing:'high',activeBefore:.35,activeAfter:1.35};
+    return {name:'desktop',asset:'desktop',dpr:Math.min(dpr,1.35),cache:48,concurrent:6,ahead:14,behind:8,stride:1,response:.23,maxStep:16,smoothing:'high',activeBefore:.5,activeAfter:1.45};
   }
   function syncDeviceDataset(){document.documentElement.dataset.device=getDeviceProfile().name}
   syncDeviceDataset();
@@ -214,7 +214,7 @@
       this.ctx=this.canvas.getContext('2d',{alpha:false,desynchronized:true});
       this.localBar=section.querySelector('.scene-local-progress i'); this.hint=section.querySelector('.frame-hint');
       this.cache=new Map(); this.pending=new Map(); this.queue=[]; this.queued=new Set();
-      this.activeLoads=0; this.loadSeq=0; this.current=1; this.target=1; this.lastDrawn=0; this.lastTarget=1; this.raf=0;
+      this.activeLoads=0; this.loadSeq=0; this.current=1; this.position=1; this.target=1; this.lastDrawn=0; this.lastTarget=1; this.lastFrameRequest=1; this.raf=0; this.lastTick=0;
       this.booted=false; this.isActive=false; this.lastCssWidth=0; this.lastCssHeight=0; this.lastProfileKey='';
       this.applyProfile(true);
     }
@@ -225,7 +225,7 @@
       this.total=Number(manifest[this.assetMode]?.[this.key]||1); this.lastProfileKey=key;
       if(changed && this.booted){
         this.queue.length=0; this.queued.clear(); this.cache.clear(); this.pending.clear();
-        this.current=1; this.target=1; this.lastDrawn=0; this.lastTarget=1;
+        this.current=1; this.position=1; this.target=1; this.lastDrawn=0; this.lastTarget=1; this.lastFrameRequest=1; this.lastTick=0;
         this.loadFrame(1,true).then(()=>{this.resize(true);this.updateFromScroll()});
       }
       return changed;
@@ -238,7 +238,7 @@
     setActive(active){
       if(active===this.isActive)return; this.isActive=active;
       if(active){this.boot();return}
-      if(this.raf){cancelAnimationFrame(this.raf);this.raf=0}
+      if(this.raf){cancelAnimationFrame(this.raf);this.raf=0} this.lastTick=0;
       this.queue.length=0;this.queued.clear();
       // Keep only the last visible frame when the scene is far away.
       const keep=this.cache.get(this.lastDrawn)||this.cache.get(this.current)||this.cache.get(1);
@@ -293,12 +293,12 @@
       const order=[center];
       for(let d=1;d<=this.profile.ahead;d++){const n=center+d*stride*direction;if(n>=1&&n<=this.total)order.push(n)}
       for(let d=1;d<=this.profile.behind;d++){const n=center-d*stride*direction;if(n>=1&&n<=this.total)order.push(n)}
-      order.forEach((n,i)=>this.loadFrame(n,i<2));this.lastTarget=center;
+      order.forEach((n,i)=>this.loadFrame(n,i===0));this.lastTarget=center;
     }
     nearestLoaded(n){
-      n=this.quantize(n);const exact=this.cache.get(n);if(exact){this.touch(n);return exact.img}
+      n=this.quantize(n);const exact=this.cache.get(n);if(exact){this.touch(n);return {img:exact.img,n}}
       const stride=this.profile.stride||1;
-      for(let d=1;d<12;d++)for(const x of [n-d*stride,n+d*stride]){const hit=this.cache.get(x);if(hit){this.touch(x);return hit.img}}
+      for(let d=1;d<18;d++)for(const x of [n-d*stride,n+d*stride]){const hit=this.cache.get(x);if(hit){this.touch(x);return {img:hit.img,n:x}}}
       return null;
     }
     resize(force=false){
@@ -312,7 +312,7 @@
       this.canvas.style.width=`${w}px`;this.canvas.style.height=`${h}px`;this.draw(this.current,true);
     }
     draw(n,force=false){
-      const img=this.nearestLoaded(n);if(!img)return;if(!force&&n===this.lastDrawn)return;this.lastDrawn=n;
+      const hit=this.nearestLoaded(n);if(!hit)return;const {img}=hit;if(!force&&hit.n===this.lastDrawn)return;this.lastDrawn=hit.n;this.stage.dataset.frame=String(hit.n);
       const ctx=this.ctx,cw=this.canvas.width,ch=this.canvas.height,iw=img.naturalWidth,ih=img.naturalHeight;
       ctx.fillStyle='#e8f0f5';ctx.fillRect(0,0,cw,ch);ctx.imageSmoothingEnabled=true;ctx.imageSmoothingQuality=this.profile.smoothing;
       if(this.deviceMode==='phone'){
@@ -326,7 +326,7 @@
     progress(){const r=this.section.getBoundingClientRect(),distance=this.section.offsetHeight-innerHeight;return distance>0?clamp01((-r.top)/distance):0}
     updateFromScroll(){
       if(!this.isActive)return;const p=this.progress(),motion=clamp01(p/this.hold);this.target=this.quantize(1+Math.round(motion*(this.total-1)));
-      if(this.localBar)this.localBar.style.width=`${(p*100).toFixed(2)}%`;if(this.hint)this.hint.style.opacity=Math.max(0,1-p*5).toFixed(3);
+      if(this.localBar)this.localBar.style.transform=`scaleX(${p.toFixed(4)})`;if(this.hint)this.hint.style.opacity=Math.max(0,1-p*5).toFixed(3);
       this.preloadWindow(this.target);this.startLoop();this.updateUI(p,motion);
     }
     updateUI(p,m){
@@ -344,9 +344,22 @@
     }
     startLoop(){
       if(this.raf||!this.isActive)return;
-      const tick=()=>{this.raf=0;if(!this.isActive)return;const diff=this.target-this.current;
-        if(Math.abs(diff)>=1){const step=Math.sign(diff)*Math.max(this.profile.stride||1,Math.ceil(Math.abs(diff)*this.profile.follow));this.current=this.quantize(this.current+step);this.loadFrame(this.current,true).then(()=>this.draw(this.current));this.raf=requestAnimationFrame(tick)}
-        else{this.current=this.target;this.loadFrame(this.current,true).then(()=>this.draw(this.current))}};
+      this.lastTick=performance.now();
+      const tick=now=>{
+        this.raf=0;if(!this.isActive)return;
+        const dt=Math.min(42,Math.max(8,now-this.lastTick||16.67));this.lastTick=now;
+        const diff=this.target-this.position;
+        const alpha=1-Math.pow(1-this.profile.response,dt/16.67);
+        const easedStep=Math.sign(diff)*Math.min(Math.abs(diff)*alpha,this.profile.maxStep);
+        this.position=Math.abs(diff)<.24?this.target:this.position+easedStep;
+        const frame=this.quantize(Math.round(this.position));this.current=frame;
+        if(frame!==this.lastFrameRequest){
+          this.lastFrameRequest=frame;this.draw(frame);
+          this.loadFrame(frame,true).then(img=>{if(img&&this.isActive&&Math.abs(frame-this.current)<=1)this.draw(frame,true)});
+          this.preloadWindow(frame);
+        }else this.draw(frame);
+        if(Math.abs(this.target-this.position)>.24)this.raf=requestAnimationFrame(tick);
+      };
       this.raf=requestAnimationFrame(tick);
     }
   }
@@ -354,7 +367,7 @@
   const scenes=[...document.querySelectorAll('[data-frame-scene]')].map(el=>new FrameScene(el));
   let ticking=false,lastViewportWidth=window.innerWidth,resizeTimer=0;
   function updateAll(){
-    ticking=false;const docH=document.documentElement.scrollHeight-innerHeight;globalProgress.style.width=`${(scrollY/Math.max(1,docH))*100}%`;
+    ticking=false;const docH=document.documentElement.scrollHeight-innerHeight;globalProgress.style.transform=`scaleX(${clamp01(scrollY/Math.max(1,docH)).toFixed(5)})`;
     const profile=getDeviceProfile();
     scenes.forEach(s=>{const r=s.section.getBoundingClientRect(),h=innerHeight;const active=r.bottom>-h*profile.activeBefore&&r.top<h*profile.activeAfter;s.setActive(active);if(active)s.updateFromScroll()});
   }

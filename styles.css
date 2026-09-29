@@ -90,9 +90,12 @@ img {
   z-index: 2000;
   top: 0;
   left: 0;
-  width: 0;
+  width: 100%;
   height: 3px;
+  transform: scaleX(0);
+  transform-origin: left center;
   background: linear-gradient(90deg, var(--blue), var(--cyan), var(--orange));
+  will-change: transform;
 }
 
 .topbar {
@@ -284,6 +287,7 @@ img {
   display: block;
   width: 100%;
   height: 100%;
+  contain: strict;
 }
 
 .frame-wash {
@@ -400,10 +404,12 @@ img {
 
 .scene-local-progress i {
   display: block;
-  width: var(--local-progress, 0%);
+  width: 100%;
   height: 100%;
+  transform: scaleX(0);
   transform-origin: left center;
   background: linear-gradient(90deg, var(--orange), var(--blue), var(--cyan));
+  will-change: transform;
 }
 
 .frame-status {
@@ -1475,6 +1481,15 @@ img {
   .brand small,
   .nav-actions .nav-chip:first-child {
     display: none;
+  }
+
+  .brand,
+  .nav-chip,
+  .scene-copy,
+  .reveal-menu,
+  .closing-card,
+  .content-card-label {
+    backdrop-filter: none;
   }
 
   .nav-chip {
