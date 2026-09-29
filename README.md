@@ -1,4 +1,17 @@
-# Wachira Interactive Portfolio v10 — Local Gallery
+# Wachira Interactive Portfolio v12 — Stable Responsive UI
+
+## V12
+
+- แยก stylesheet หลักไปที่ `styles.css`
+- รวม responsive rules เป็น Desktop / Tablet / Phone
+- แก้หัวข้อภาษาไทยและอังกฤษล้นกรอบหรือตัดบรรทัดผิดตำแหน่ง
+- ปรับฉากเปิด เมนู Portfolio, cards, gallery และ viewer ให้รองรับจอ 360–1440px
+- เพิ่ม focus styles, dialog semantics, focus trap และคืน focus หลังปิด modal
+- ลดการใช้ `!important` จาก 313 จุด เหลือเฉพาะกฎ reduced-motion
+
+รายละเอียดเพิ่มเติมอยู่ใน `V12_CHANGELOG.md`
+
+## Local Gallery
 
 ## จุดเปลี่ยนหลัก
 v10 ใช้รูปจากเครื่อง/Repository เป็นแหล่งหลัก แทนการ hotlink จาก Google Drive
