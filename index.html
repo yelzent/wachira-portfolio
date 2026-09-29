@@ -5,13 +5,13 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="referrer" content="no-referrer">
 <meta name="theme-color" content="#f7fbff">
-<meta name="portfolio-version" content="12.1-full-motion-preload-fast-follow">
-  <title>Wachira Uthawang — Interactive Teacher Portfolio v12</title>
+<meta name="portfolio-version" content="13-performance-rebuild-imagebitmap">
+  <title>Wachira Uthawang — Interactive Teacher Portfolio v13</title>
 <meta name="description" content="Interactive Teacher Portfolio — Wachira Uthawang">
 <link rel="stylesheet" href="styles.css">
 
 <style>
-  /* V12.1 — Full Motion Preload. Gallery/document images remain lazy-loaded. */
+  /* V13 — optimized motion frames + rolling ImageBitmap decode cache. */
   html.motion-preparing{scroll-behavior:auto}
   body.motion-loading{overflow:hidden;touch-action:none}
   .motion-boot{position:fixed;inset:0;z-index:99999;display:grid;place-items:center;background:#f7fbff;color:#13202c;transition:opacity .42s ease,visibility .42s ease}
@@ -38,7 +38,7 @@
   <div class="motion-boot-box">
     <div class="motion-boot-mark">WU</div>
     <div class="motion-boot-title">Preparing interactive portfolio</div>
-    <div class="motion-boot-sub">กำลังโหลด Motion Frames ให้พร้อมก่อนเริ่มใช้งาน<br>รูปผลงานและเอกสารจะโหลดภายหลังตามตำแหน่งที่เปิดดู</div>
+    <div class="motion-boot-sub">กำลังเตรียมชุด Motion ที่ปรับขนาดให้เหมาะกับอุปกรณ์<br>รูปผลงานและเอกสารจะโหลดภายหลังตามตำแหน่งที่เปิดดู</div>
     <div class="motion-boot-track"><i id="motionBootBar"></i></div>
     <div class="motion-boot-row"><span class="motion-boot-status" id="motionBootStatus">Preparing motion…</span><span class="motion-boot-percent" id="motionBootPercent">0%</span></div>
     <div class="motion-boot-scenes"><span id="bootIntro">INTRO</span><span id="bootReturn">RETURN</span><span id="bootClosing">CLOSING</span></div>
@@ -48,7 +48,7 @@
 
 <div class="progress-line" id="progressLine"></div>
 <header class="topbar">
-  <a class="brand" href="#experience"><span class="brand-badge">WU</span><span><strong>WACHIRA UTHAWANG</strong><small>INTERACTIVE TEACHER PORTFOLIO · V12.1</small></span></a>
+  <a class="brand" href="#experience"><span class="brand-badge">WU</span><span><strong>WACHIRA UTHAWANG</strong><small>INTERACTIVE TEACHER PORTFOLIO · V13</small></span></a>
   <nav class="nav-actions" aria-label="เมนูหลัก"><a class="nav-chip" href="#hub">MENU</a><button type="button" class="nav-chip" id="openAllGallery">PHOTO ARCHIVE</button></nav>
 </header>
 <nav class="section-dock" aria-label="Portfolio sections">
@@ -216,27 +216,26 @@
 <!-- Gallery modal -->
 <div class="modal" id="galleryModal" role="dialog" aria-modal="true" aria-labelledby="galleryTitle" aria-hidden="true"><div class="modal-panel" tabindex="-1"><button type="button" class="modal-close" data-close aria-label="ปิดหน้าต่าง">×</button><div class="gallery-panel"><div class="gallery-head"><div><div class="section-index">PHOTO ARCHIVE</div><h2 id="galleryTitle">คลังภาพ</h2></div><div class="gallery-count" id="galleryCount" aria-live="polite"></div></div><div class="gallery-filters" id="galleryFilters" aria-label="หมวดหมู่ภาพ"></div><div class="sheet-grid" id="sheetGrid"></div><div class="pager"><button type="button" id="prevPage">← ก่อนหน้า</button><button type="button" id="nextPage">ถัดไป →</button></div></div></div></div>
 
-<script src="data/frame-manifest.js"></script>
+<script src="data/frame-manifest-v13.js"></script>
 <script src="data/sheet-images.js"></script>
 <script>
 (()=>{
   const clamp01=v=>Math.max(0,Math.min(1,v));
   const smoothstep=(a,b,x)=>{x=clamp01((x-a)/(b-a));return x*x*(3-2*x)};
   const globalProgress=document.getElementById('progressLine');
-  const manifest=window.FRAME_MANIFEST||{};
+  const manifest=window.FRAME_MANIFEST_V13||{};
 
-  // V12.1: device-specific decode cache + fast-follow scrub.
+  // V13: real per-device assets. Fewer frames + lower canvas DPR reduce decode and draw cost.
   function getDeviceProfile(){
     const w=window.innerWidth||document.documentElement.clientWidth||1200;
-    const portrait=(window.innerHeight||0)>w;
     const dpr=window.devicePixelRatio||1;
     if(w<=767){
-      return {name:'phone',asset:'mobile',dpr:Math.min(dpr,1),cache:18,concurrent:2,ahead:4,behind:2,stride:1,follow:.54,minStep:2,maxStep:10,smoothing:'medium',preloadConcurrent:3,activeBefore:.24,activeAfter:.96};
+      return {name:'phone',asset:'phone',dpr:Math.min(dpr,1),cache:14,concurrent:2,ahead:5,behind:2,follow:.80,minStep:3,maxStep:16,smoothing:'low',preloadConcurrent:3,activeBefore:.22,activeAfter:.92};
     }
     if(w<=1199){
-      return {name:'tablet',asset:portrait?'mobile':'desktop',dpr:Math.min(dpr,1.15),cache:26,concurrent:3,ahead:5,behind:3,stride:1,follow:.58,minStep:3,maxStep:14,smoothing:'medium',preloadConcurrent:4,activeBefore:.34,activeAfter:1.10};
+      return {name:'tablet',asset:'tablet',dpr:Math.min(dpr,1.05),cache:18,concurrent:3,ahead:6,behind:3,follow:.76,minStep:4,maxStep:20,smoothing:'low',preloadConcurrent:4,activeBefore:.30,activeAfter:1.04};
     }
-    return {name:'desktop',asset:'desktop',dpr:Math.min(dpr,1.25),cache:36,concurrent:4,ahead:6,behind:3,stride:1,follow:.62,minStep:4,maxStep:18,smoothing:'high',preloadConcurrent:5,activeBefore:.44,activeAfter:1.24};
+    return {name:'desktop',asset:'desktop',dpr:Math.min(dpr,1.15),cache:22,concurrent:3,ahead:7,behind:3,follow:.72,minStep:5,maxStep:24,smoothing:'medium',preloadConcurrent:5,activeBefore:.40,activeAfter:1.18};
   }
   function syncDeviceDataset(){document.documentElement.dataset.device=getDeviceProfile().name}
   syncDeviceDataset();
@@ -249,111 +248,139 @@
       this.ctx=this.canvas.getContext('2d',{alpha:false,desynchronized:true});
       this.localBar=section.querySelector('.scene-local-progress i'); this.hint=section.querySelector('.frame-hint');
       this.cache=new Map(); this.pending=new Map(); this.queue=[]; this.queued=new Set();
-      this.activeLoads=0; this.loadSeq=0; this.current=1; this.position=1; this.target=1; this.lastDrawn=0; this.lastTarget=1; this.lastFrameRequest=1; this.raf=0; this.lastTick=0;
+      this.activeLoads=0; this.loadSeq=0; this.current=1; this.position=1; this.target=1; this.lastDrawn=0; this.lastTarget=1; this.raf=0;
       this.booted=false; this.isActive=false; this.lastCssWidth=0; this.lastCssHeight=0; this.lastProfileKey='';
       this.applyProfile(true);
     }
     profileKey(p){return `${p.name}|${p.asset}|${p.dpr}`}
+    closeEntry(entry){
+      try{if(entry?.closable&&entry.source?.close)entry.source.close()}catch(_){ }
+    }
+    clearDecoded(keepFrame=0){
+      for(const [n,entry] of this.cache){if(n!==keepFrame)this.closeEntry(entry)}
+      const keep=keepFrame?this.cache.get(keepFrame):null;
+      this.cache.clear();if(keep)this.cache.set(keepFrame,keep);
+    }
     applyProfile(force=false){
       const next=getDeviceProfile(), key=this.profileKey(next), changed=force||key!==this.lastProfileKey;
       this.profile=next; this.deviceMode=next.name; this.assetMode=next.asset; this.maxCache=next.cache; this.maxConcurrent=next.concurrent; this.dpr=next.dpr;
       this.total=Number(manifest[this.assetMode]?.[this.key]||1); this.lastProfileKey=key;
       if(changed && this.booted){
-        this.queue.length=0; this.queued.clear(); this.cache.clear(); this.pending.clear();
-        this.current=1; this.position=1; this.target=1; this.lastDrawn=0; this.lastTarget=1; this.lastFrameRequest=1; this.lastTick=0;
+        this.queue.length=0; this.queued.clear(); this.pending.clear(); this.clearDecoded();
+        this.current=1; this.position=1; this.target=1; this.lastDrawn=0; this.lastTarget=1;
         this.loadFrame(1,true).then(()=>{this.resize(true);this.updateFromScroll()});
       }
       return changed;
     }
-    framePath(n){return `assets/frames/${this.assetMode}/${this.key}/${String(n).padStart(4,'0')}.webp`}
+    framePath(n){return `assets/frames-v13/${this.assetMode}/${this.key}/${String(n).padStart(4,'0')}.webp`}
     boot(){
       if(this.booted)return; this.booted=true;
       this.loadFrame(1,true).then(()=>{this.resize(true);this.preloadWindow(1);this.updateFromScroll()});
     }
     setActive(active){
       if(active===this.isActive)return; this.isActive=active;
-      if(active){this.boot();return}
-      if(this.raf){cancelAnimationFrame(this.raf);this.raf=0} this.lastTick=0;
+      if(active){this.boot();this.preloadWindow(this.target||1);return}
+      if(this.raf){cancelAnimationFrame(this.raf);this.raf=0}
       this.queue.length=0;this.queued.clear();
-      // Keep only the last visible frame when the scene is far away.
-      const keep=this.cache.get(this.lastDrawn)||this.cache.get(this.current)||this.cache.get(1);
-      this.cache.clear(); if(keep)this.cache.set(this.lastDrawn||this.current||1,keep);
+      const keepFrame=this.lastDrawn||this.current||1;
+      this.clearDecoded(keepFrame);
     }
-    quantize(n){
-      n=Math.max(1,Math.min(this.total,n)); const stride=this.profile.stride||1;
-      if(stride>1)n=1+Math.round((n-1)/stride)*stride;
-      return Math.max(1,Math.min(this.total,n));
-    }
+    quantize(n){return Math.max(1,Math.min(this.total,Math.round(n)))}
     loadFrame(n,priority=false){
       n=this.quantize(n);
-      if(this.cache.has(n)){this.touch(n);return Promise.resolve(this.cache.get(n).img)}
+      if(this.cache.has(n)){this.touch(n);return Promise.resolve(this.cache.get(n))}
       if(this.pending.has(n))return this.pending.get(n);
-      let resolvePromise; const promise=new Promise(resolve=>{resolvePromise=resolve}); this.pending.set(n,promise);
-      this.enqueue({n,priority:!!priority,resolve:resolvePromise,attempt:0,seq:++this.loadSeq}); return promise;
+      let resolvePromise;const promise=new Promise(resolve=>{resolvePromise=resolve});this.pending.set(n,promise);
+      this.enqueue({n,priority:!!priority,resolve:resolvePromise,attempt:0,seq:++this.loadSeq});return promise;
     }
     enqueue(job){
-      if(this.queued.has(job.n))return; this.queued.add(job.n); this.queue.push(job);
-      this.queue.sort((a,b)=>(Number(b.priority)-Number(a.priority))||(a.seq-b.seq)); this.pumpQueue();
+      if(this.queued.has(job.n))return;this.queued.add(job.n);this.queue.push(job);
+      this.queue.sort((a,b)=>(Number(b.priority)-Number(a.priority))||(a.seq-b.seq));this.pumpQueue();
     }
     pumpQueue(){
       while(this.activeLoads<this.maxConcurrent&&this.queue.length){
         const job=this.queue.shift();this.queued.delete(job.n);
-        if(this.cache.has(job.n)){this.pending.delete(job.n);job.resolve(this.cache.get(job.n).img);continue}
+        if(this.cache.has(job.n)){this.pending.delete(job.n);job.resolve(this.cache.get(job.n));continue}
         this.activeLoads++;this.fetchJob(job);
       }
     }
+    async decodeSource(n){
+      const url=this.framePath(n);
+      // createImageBitmap gives us an explicitly disposable decoded bitmap and avoids re-decoding HTMLImageElement frames during scrub.
+      if(typeof createImageBitmap==='function'&&location.protocol!=='file:'){
+        try{
+          const res=await fetch(url,{cache:'force-cache',credentials:'same-origin'});
+          if(!res.ok)throw new Error(`HTTP ${res.status}`);
+          const blob=await res.blob();
+          const bitmap=await createImageBitmap(blob);
+          return {source:bitmap,width:bitmap.width,height:bitmap.height,closable:true,used:performance.now()};
+        }catch(_){/* fallback below */}
+      }
+      return await new Promise((resolve,reject)=>{
+        const img=new Image();img.decoding='async';img.referrerPolicy='no-referrer';
+        img.onload=async()=>{try{if(img.decode)await img.decode().catch(()=>{});resolve({source:img,width:img.naturalWidth,height:img.naturalHeight,closable:false,used:performance.now()})}catch(e){reject(e)}};
+        img.onerror=reject;img.src=url;
+      });
+    }
     fetchJob(job){
-      const img=new Image();img.decoding='async';img.referrerPolicy='no-referrer';if(job.priority)img.fetchPriority='high';
-      const done=(ok)=>{
+      this.decodeSource(job.n).then(entry=>{
         this.activeLoads=Math.max(0,this.activeLoads-1);
-        if(ok){
-          if(this.isActive||job.priority){this.cache.set(job.n,{img,used:performance.now()});this.evict(job.n)}
-          this.pending.delete(job.n);job.resolve(img);
-        }else if(job.attempt<2){
-          job.attempt++;const delay=job.attempt===1?280:850;setTimeout(()=>{job.seq=++this.loadSeq;this.enqueue(job)},delay);
-        }else{this.pending.delete(job.n);job.resolve(null)}
+        if(this.isActive||job.priority){this.cache.set(job.n,entry);this.evict(job.n)}else this.closeEntry(entry);
+        this.pending.delete(job.n);job.resolve(entry);this.pumpQueue();
+      }).catch(()=>{
+        this.activeLoads=Math.max(0,this.activeLoads-1);
+        if(job.attempt<2){job.attempt++;setTimeout(()=>{job.seq=++this.loadSeq;this.enqueue(job)},job.attempt===1?180:520)}
+        else{this.pending.delete(job.n);job.resolve(null)}
         this.pumpQueue();
-      };
-      img.onload=()=>{const d=img.decode?.();d&&typeof d.then==='function'?d.catch(()=>{}).finally(()=>done(true)):done(true)};
-      img.onerror=()=>done(false);img.src=this.framePath(job.n);
+      });
     }
     touch(n){const item=this.cache.get(n);if(item)item.used=performance.now()}
     evict(center){
       if(this.cache.size<=this.maxCache)return;
       const entries=[...this.cache.entries()].sort((a,b)=>{const da=Math.abs(a[0]-center),db=Math.abs(b[0]-center);return da!==db?db-da:a[1].used-b[1].used});
-      while(this.cache.size>this.maxCache&&entries.length)this.cache.delete(entries.shift()[0]);
+      while(this.cache.size>this.maxCache&&entries.length){const [n,entry]=entries.shift();this.cache.delete(n);this.closeEntry(entry)}
+    }
+    trimQueued(wanted){
+      if(!this.queue.length)return;
+      const keep=[];
+      for(const job of this.queue){
+        if(wanted.has(job.n))keep.push(job);
+        else{this.queued.delete(job.n);this.pending.delete(job.n);job.resolve(null)}
+      }
+      this.queue=keep;this.queued=new Set(keep.map(job=>job.n));
     }
     preloadWindow(center){
-      if(!this.isActive)return; center=this.quantize(center); const direction=center>=this.lastTarget?1:-1, stride=this.profile.stride||1;
-      const order=[center];
-      for(let d=1;d<=this.profile.ahead;d++){const n=center+d*stride*direction;if(n>=1&&n<=this.total)order.push(n)}
-      for(let d=1;d<=this.profile.behind;d++){const n=center-d*stride*direction;if(n>=1&&n<=this.total)order.push(n)}
-      order.forEach((n,i)=>this.loadFrame(n,i===0));this.lastTarget=center;
+      if(!this.isActive)return;center=this.quantize(center);const direction=center>=this.lastTarget?1:-1;
+      const target=this.quantize(this.target||center),order=[center];
+      for(let d=1;d<=this.profile.ahead;d++){const n=center+d*direction;if(n>=1&&n<=this.total)order.push(n)}
+      for(let d=1;d<=this.profile.behind;d++){const n=center-d*direction;if(n>=1&&n<=this.total)order.push(n)}
+      if(!order.includes(target))order.unshift(target);
+      const wanted=new Set(order);this.trimQueued(wanted);
+      order.forEach((n,i)=>this.loadFrame(n,i===0||n===target));this.lastTarget=center;
     }
     nearestLoaded(n){
-      n=this.quantize(n);const exact=this.cache.get(n);if(exact){this.touch(n);return {img:exact.img,n}}
-      const stride=this.profile.stride||1;
-      for(let d=1;d<18;d++)for(const x of [n-d*stride,n+d*stride]){const hit=this.cache.get(x);if(hit){this.touch(x);return {img:hit.img,n:x}}}
+      n=this.quantize(n);const exact=this.cache.get(n);if(exact){this.touch(n);return {entry:exact,n}}
+      for(let d=1;d<=12;d++)for(const x of [n-d,n+d]){const hit=this.cache.get(x);if(hit){this.touch(x);return {entry:hit,n:x}}}
       return null;
     }
     resize(force=false){
-      this.applyProfile(false); const r=this.stage.getBoundingClientRect(), w=Math.max(1,Math.round(r.width)), h=Math.max(1,Math.round(r.height));
-      // iOS Safari changes only viewport height while the address bar collapses. Ignore that resize on phone/tablet.
-      const widthChanged=Math.abs(w-this.lastCssWidth)>2, heightChanged=Math.abs(h-this.lastCssHeight)>2;
-      if(!force && this.deviceMode!=='desktop' && !widthChanged)return;
-      if(!force && this.deviceMode==='desktop' && !widthChanged && !heightChanged)return;
+      this.applyProfile(false);const r=this.stage.getBoundingClientRect(),w=Math.max(1,Math.round(r.width)),h=Math.max(1,Math.round(r.height));
+      const widthChanged=Math.abs(w-this.lastCssWidth)>2,heightChanged=Math.abs(h-this.lastCssHeight)>2;
+      if(!force&&this.deviceMode!=='desktop'&&!widthChanged)return;
+      if(!force&&this.deviceMode==='desktop'&&!widthChanged&&!heightChanged)return;
       this.lastCssWidth=w;this.lastCssHeight=h;this.dpr=this.profile.dpr;
       this.canvas.width=Math.max(1,Math.round(w*this.dpr));this.canvas.height=Math.max(1,Math.round(h*this.dpr));
       this.canvas.style.width=`${w}px`;this.canvas.style.height=`${h}px`;this.draw(this.current,true);
     }
     draw(n,force=false){
-      const hit=this.nearestLoaded(n);if(!hit)return;const {img}=hit;if(!force&&hit.n===this.lastDrawn)return;this.lastDrawn=hit.n;this.stage.dataset.frame=String(hit.n);
-      const ctx=this.ctx,cw=this.canvas.width,ch=this.canvas.height,iw=img.naturalWidth,ih=img.naturalHeight;
+      const hit=this.nearestLoaded(n);if(!hit)return;const {entry}=hit;if(!force&&hit.n===this.lastDrawn)return;
+      this.lastDrawn=hit.n;this.stage.dataset.frame=String(hit.n);
+      const ctx=this.ctx,cw=this.canvas.width,ch=this.canvas.height,iw=entry.width,ih=entry.height,img=entry.source;
       ctx.fillStyle='#e8f0f5';ctx.fillRect(0,0,cw,ch);ctx.imageSmoothingEnabled=true;ctx.imageSmoothingQuality=this.profile.smoothing;
       if(this.deviceMode==='phone'){
-        const sx=iw*.10,sw=iw*.80,scale=cw/sw,dh=ih*scale,dy=Math.max(38*this.dpr,ch*.055);ctx.drawImage(img,sx,0,sw,ih,0,dy,cw,dh);
-      }else if(this.deviceMode==='tablet' && innerHeight>innerWidth){
-        const sx=iw*.04,sw=iw*.92,scale=cw/sw,dh=ih*scale,dy=Math.max(34*this.dpr,ch*.06);ctx.drawImage(img,sx,0,sw,ih,0,dy,cw,dh);
+        const sx=iw*.12,sw=iw*.76,scale=cw/sw,dh=ih*scale,dy=Math.max(32*this.dpr,ch*.045);ctx.drawImage(img,sx,0,sw,ih,0,dy,cw,dh);
+      }else if(this.deviceMode==='tablet'&&innerHeight>innerWidth){
+        const sx=iw*.05,sw=iw*.90,scale=cw/sw,dh=ih*scale,dy=Math.max(30*this.dpr,ch*.05);ctx.drawImage(img,sx,0,sw,ih,0,dy,cw,dh);
       }else{
         const scale=Math.max(cw/iw,ch/ih),dw=iw*scale,dh=ih*scale,dx=(cw-dw)/2+cw*this.shift,dy=(ch-dh)/2;ctx.drawImage(img,dx,dy,dw,dh);
       }
@@ -378,45 +405,25 @@
       }
     }
     startLoop(){
-      // V12.1 Fast Follow: close the gap in only a few RAFs instead of easing slowly.
-      // This preserves motion rhythm, but avoids the old "character trails behind the wheel/finger" feeling.
       if(this.raf||!this.isActive)return;
-      this.lastTick=performance.now();
-      const tick=now=>{
+      const tick=()=>{
         this.raf=0;if(!this.isActive)return;
-        this.lastTick=now;
-        const diff=this.target-this.position, distance=Math.abs(diff);
-        if(distance<=.55){
-          this.position=this.target;
-        }else{
-          const dynamic=Math.ceil(distance*(this.profile.follow||.58));
+        const target=this.quantize(this.target);
+        // If the exact target has already been decoded, scrub directly to it. This is the cheapest and most responsive path.
+        if(this.cache.has(target)){
+          this.position=target;this.current=target;this.draw(target);this.preloadWindow(target);return;
+        }
+        const diff=target-this.position,distance=Math.abs(diff);
+        if(distance<=.5)this.position=target;
+        else{
+          const dynamic=Math.ceil(distance*this.profile.follow);
           const step=Math.min(distance,Math.min(this.profile.maxStep,Math.max(this.profile.minStep,dynamic)));
           this.position+=Math.sign(diff)*step;
         }
-        const frame=this.quantize(Math.round(this.position));
-        this.current=frame;
-        this.lastFrameRequest=frame;
-
-        // Render from decoded cache immediately; if exact frame is not decoded yet, nearest keyframe prevents a blank canvas.
-        this.draw(frame);
-        if(!this.cache.has(frame)){
-          this.loadFrame(frame,true).then(img=>{
-            if(img&&this.isActive&&this.current===frame)this.draw(frame,true);
-          });
-        }
-
-        // Decode around the visible frame and also request the true target urgently.
+        const frame=this.quantize(this.position);this.current=frame;this.draw(frame);
+        this.loadFrame(target,true).then(entry=>{if(entry&&this.isActive&&this.target===target){this.position=target;this.current=target;this.draw(target,true)}});
         this.preloadWindow(frame);
-        const target=this.quantize(this.target);
-        if(!this.cache.has(target))this.loadFrame(target,true);
-
-        if(Math.abs(this.target-this.position)>.55)this.raf=requestAnimationFrame(tick);
-        else{
-          this.position=this.target;
-          this.current=target;
-          this.draw(target);
-          if(!this.cache.has(target))this.loadFrame(target,true).then(img=>{if(img&&this.isActive&&this.current===target)this.draw(target,true)});
-        }
+        if(Math.abs(target-this.position)>.5)this.raf=requestAnimationFrame(tick);
       };
       this.raf=requestAnimationFrame(tick);
     }
@@ -438,8 +445,8 @@
     },140);
   },{passive:true});
   addEventListener('orientationchange',()=>setTimeout(()=>{lastViewportWidth=window.innerWidth;syncDeviceDataset();scenes.forEach(s=>{s.applyProfile(true);s.resize(true)});scheduleUpdate()},220),{passive:true});
-  // V12.1 — preload every Motion Frame for the current device asset set into the browser HTTP cache.
-  // IMPORTANT: this does NOT retain all decoded bitmaps in JS memory. Only a small moving decode cache is kept by FrameScene.
+  // V13 — preload the smaller compressed motion set into HTTP cache, then decode only sparse anchors.
+  // The rolling ImageBitmap cache keeps memory bounded while avoiding decode work on the exact scroll frame.
   let motionReady=false;
   const bootUI={
     root:document.getElementById('motionBoot'),bar:document.getElementById('motionBootBar'),pct:document.getElementById('motionBootPercent'),
@@ -447,52 +454,36 @@
     intro:document.getElementById('bootIntro'),return:document.getElementById('bootReturn'),closing:document.getElementById('bootClosing')
   };
   let skipRequested=false;
-  bootUI.skip?.addEventListener('click',()=>{skipRequested=true;releaseMotionBoot('Loading continues in background…')});
-  setTimeout(()=>bootUI.skip?.classList.add('show'),7000);
+  bootUI.skip?.addEventListener('click',()=>{skipRequested=true;releaseMotionBoot('กำลังโหลดต่อเบื้องหลัง…')});
+  setTimeout(()=>bootUI.skip?.classList.add('show'),5000);
 
   function releaseMotionBoot(message='Ready'){
     if(motionReady)return;motionReady=true;
     if(bootUI.status)bootUI.status.textContent=message;
     if(bootUI.bar)bootUI.bar.style.transform='scaleX(1)';
     if(bootUI.pct)bootUI.pct.textContent='100%';
-    document.body.classList.remove('motion-loading');
-    document.documentElement.classList.remove('motion-preparing');
-    bootUI.root?.classList.add('is-ready');
-    scheduleUpdate();
-    setTimeout(()=>bootUI.root?.remove(),520);
+    document.body.classList.remove('motion-loading');document.documentElement.classList.remove('motion-preparing');
+    bootUI.root?.classList.add('is-ready');scheduleUpdate();setTimeout(()=>bootUI.root?.remove(),520);
   }
-
-  function motionUrl(asset,key,n){return `assets/frames/${asset}/${key}/${String(n).padStart(4,'0')}.webp`}
-
+  function motionUrl(asset,key,n){return `assets/frames-v13/${asset}/${key}/${String(n).padStart(4,'0')}.webp`}
   async function fetchFrameToHttpCache(url,attempt=0){
     try{
-      if(location.protocol==='file:'){
-        return await new Promise(resolve=>{const img=new Image();img.onload=()=>resolve(true);img.onerror=()=>resolve(false);img.src=url});
-      }
-      const res=await fetch(url,{cache:'force-cache',credentials:'same-origin'});
-      if(!res.ok)throw new Error(`HTTP ${res.status}`);
-      await res.arrayBuffer();
-      return true;
-    }catch(err){
-      if(attempt<2){await new Promise(r=>setTimeout(r,attempt===0?220:650));return fetchFrameToHttpCache(url,attempt+1)}
-      return false;
-    }
+      if(location.protocol==='file:')return await new Promise(resolve=>{const img=new Image();img.onload=()=>resolve(true);img.onerror=()=>resolve(false);img.src=url});
+      const res=await fetch(url,{cache:'force-cache',credentials:'same-origin'});if(!res.ok)throw new Error(`HTTP ${res.status}`);await res.arrayBuffer();return true;
+    }catch(_){if(attempt<2){await new Promise(r=>setTimeout(r,attempt===0?160:420));return fetchFrameToHttpCache(url,attempt+1)}return false}
   }
-
   async function seedDecodedKeyframes(){
-    // Sparse decoded anchors mean nearestLoaded() always has something close while an exact frame decodes.
     const profile=getDeviceProfile();
-    const counts={phone:{intro:14,return:8,closing:8},tablet:{intro:16,return:10,closing:10},desktop:{intro:18,return:12,closing:12}}[profile.name];
+    const counts={phone:{intro:8,return:5,closing:5},tablet:{intro:10,return:6,closing:6},desktop:{intro:12,return:7,closing:7}}[profile.name];
     for(const scene of scenes){
-      scene.applyProfile(false);
-      const count=Math.min(scene.total,counts[scene.key]||8);
-      const keys=[];
-      for(let i=0;i<count;i++)keys.push(scene.quantize(1+Math.round((scene.total-1)*(i/Math.max(1,count-1)))));
+      scene.applyProfile(false);const count=Math.min(scene.total,counts[scene.key]||6),keys=[];
+      for(let i=0;i<count;i++)keys.push(1+Math.round((scene.total-1)*(i/Math.max(1,count-1))));
       for(const n of [...new Set(keys)])await scene.loadFrame(n,true);
     }
+    // Keep the first intro neighborhood hot because it is the first interaction users touch.
+    const intro=scenes.find(s=>s.key==='intro');if(intro){intro.setActive(true);intro.preloadWindow(1)}
   }
-
-  async function preloadAllMotion(){
+  async function preloadOptimizedMotion(){
     document.documentElement.classList.add('motion-preparing');
     const p=getDeviceProfile(),asset=p.asset;
     const groups=[
@@ -500,41 +491,20 @@
       {key:'return',total:Number(manifest[asset]?.return||0),el:bootUI.return,label:'Return'},
       {key:'closing',total:Number(manifest[asset]?.closing||0),el:bootUI.closing,label:'Closing'}
     ].filter(g=>g.total>0);
-    const jobs=[];
-    for(const g of groups)for(let n=1;n<=g.total;n++)jobs.push({g,n,url:motionUrl(asset,g.key,n)});
-    const total=jobs.length;let index=0,done=0,failed=0;
-    const groupDone=new Map(groups.map(g=>[g.key,0]));
+    const jobs=[];for(const g of groups)for(let n=1;n<=g.total;n++)jobs.push({g,n,url:motionUrl(asset,g.key,n)});
+    const total=jobs.length;let index=0,done=0,failed=0;const groupDone=new Map(groups.map(g=>[g.key,0]));
     const update=job=>{
       done++;if(job){groupDone.set(job.g.key,(groupDone.get(job.g.key)||0)+1);if(groupDone.get(job.g.key)>=job.g.total)job.g.el?.classList.add('done')}
-      const percent=Math.round(done/Math.max(1,total)*100);
-      if(bootUI.bar)bootUI.bar.style.transform=`scaleX(${percent/100})`;
-      if(bootUI.pct)bootUI.pct.textContent=`${percent}%`;
-      if(bootUI.status){
-        const current=job?.g?.label||'Motion';
-        bootUI.status.textContent=`${current} · ${done}/${total}${failed?` · retry ${failed}`:''}`;
-      }
+      const percent=Math.round(done/Math.max(1,total)*100);if(bootUI.bar)bootUI.bar.style.transform=`scaleX(${percent/100})`;if(bootUI.pct)bootUI.pct.textContent=`${percent}%`;
+      if(bootUI.status)bootUI.status.textContent=`${job?.g?.label||'Motion'} · ${done}/${total}${failed?` · retry ${failed}`:''}`;
     };
-    const worker=async()=>{
-      while(index<jobs.length&&!skipRequested){
-        const job=jobs[index++];const ok=await fetchFrameToHttpCache(job.url);if(!ok)failed++;update(job);
-      }
-    };
+    const worker=async()=>{while(index<jobs.length&&!skipRequested){const job=jobs[index++],ok=await fetchFrameToHttpCache(job.url);if(!ok)failed++;update(job)}};
     await Promise.all(Array.from({length:Math.min(p.preloadConcurrent||4,total)},worker));
-
-    // If user skipped, remaining files continue quietly with even lower concurrency.
-    if(skipRequested&&index<jobs.length){
-      const background=async()=>{while(index<jobs.length){const job=jobs[index++];await fetchFrameToHttpCache(job.url);}};
-      Promise.all([background(),background()]).catch(()=>{});
-      return;
-    }
-
-    if(bootUI.status)bootUI.status.textContent=failed?`Network ready · ${failed} frame(s) will retry on demand`:'Network ready · decoding key frames…';
-    await seedDecodedKeyframes();
-    for(const g of groups)g.el?.classList.add('done');
-    releaseMotionBoot(failed?'Ready · missing frames retry automatically':'Ready');
+    if(skipRequested&&index<jobs.length){const background=async()=>{while(index<jobs.length){const job=jobs[index++];await fetchFrameToHttpCache(job.url)}};Promise.all([background(),background()]).catch(()=>{});return}
+    if(bootUI.status)bootUI.status.textContent=failed?`Network ready · ${failed} frame(s) retry on demand`:'Network ready · decoding key frames…';
+    await seedDecodedKeyframes();for(const g of groups)g.el?.classList.add('done');releaseMotionBoot(failed?'Ready · missing frames retry automatically':'Ready');
   }
-
-  preloadAllMotion().catch(()=>releaseMotionBoot('Ready · motion will continue loading'));
+  preloadOptimizedMotion().catch(()=>releaseMotionBoot('Ready · motion continues loading'));
 
   // Preview helpers for testing: ?preview=intro-name | intro-menu | return | closing
   const preview=new URLSearchParams(location.search).get('preview');
