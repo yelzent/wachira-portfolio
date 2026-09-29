@@ -3,6 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="referrer" content="no-referrer">
 <meta name="theme-color" content="#f7fbff">
 <title>Wachira Uthawang — Interactive Teacher Portfolio v6</title>
 <meta name="description" content="Interactive Teacher Portfolio — Wachira Uthawang">
@@ -876,11 +877,36 @@ body{background:#f6f9fc}
   const labels={all:'ทั้งหมด',about:'ข้อมูลวิชาชีพ',teaching:'การสอนและผลงาน',systems:'Digital Systems',professional:'การพัฒนาวิชาชีพ',community:'กิจกรรมและชุมชน'};
   let galleryCat='all', page=0; const pageSize=12;
   const data=(window.PORTFOLIO_SHEET_IMAGES||[]).filter(x=>x.show);
+  function externalImageAttrs(x,alt='',extra=''){
+    if(!x)return `alt="${escapeHtml(alt)}" ${extra}`;
+    return `src="${x.url}" data-fallback-1="${x.altUrl||''}" data-fallback-2="${x.fallbackUrl||''}" data-fallback-stage="0" referrerpolicy="no-referrer" alt="${escapeHtml(alt||x.title||'')}" ${extra}`;
+  }
+  window.portfolioImageFallback=function(img){
+    const stage=Number(img.dataset.fallbackStage||0);
+    const next=stage===0?img.dataset.fallback1:stage===1?img.dataset.fallback2:'';
+    if(next){
+      img.dataset.fallbackStage=String(stage+1);
+      img.src=next;
+      return;
+    }
+    img.onerror=null;
+    img.classList.add('image-load-failed');
+    img.style.opacity='.22';
+  };
+  function applyExternalImage(img,x){
+    if(!img||!x)return;
+    img.src=x.url;
+    img.dataset.fallback1=x.altUrl||'';
+    img.dataset.fallback2=x.fallbackUrl||'';
+    img.dataset.fallbackStage='0';
+    img.referrerPolicy='no-referrer';
+    img.onerror=()=>window.portfolioImageFallback(img);
+  }
   function filtered(){return galleryCat==='all'?data:data.filter(x=>x.category===galleryCat)}
   function renderGallery(){
     const items=filtered(); const pages=Math.max(1,Math.ceil(items.length/pageSize)); page=Math.min(page,pages-1); const slice=items.slice(page*pageSize,(page+1)*pageSize);
     gTitle.textContent=labels[galleryCat]||'คลังภาพ'; gCount.textContent=`${items.length} รายการ · หน้า ${page+1}/${pages}`;
-    grid.innerHTML=slice.map(x=>`<article class="sheet-tile"><img loading="lazy" src="${x.url}" alt="${escapeHtml(x.title)}" onerror="this.style.opacity=.18"><div><small>${String(x.no).padStart(3,'0')} · ${escapeHtml(x.title)}</small></div></article>`).join('');
+    grid.innerHTML=slice.map(x=>`<article class="sheet-tile"><img loading="lazy" ${externalImageAttrs(x,x.title,'onerror="window.portfolioImageFallback(this)"')}><div><small>${String(x.no).padStart(3,'0')} · ${escapeHtml(x.title)}</small></div></article>`).join('');
     [...filters.children].forEach(b=>b.classList.toggle('active',b.dataset.cat===galleryCat));
   }
   function escapeHtml(s){return String(s||'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
@@ -891,7 +917,7 @@ body{background:#f6f9fc}
   document.getElementById('prevPage').addEventListener('click',()=>{if(page>0){page--;renderGallery()}}); document.getElementById('nextPage').addEventListener('click',()=>{const pages=Math.ceil(filtered().length/pageSize);if(page<pages-1){page++;renderGallery()}});
 
   // A few live-sheet preview cards without loading all 158 images.
-  function fillRail(id,cat,n=8){const el=document.getElementById(id);if(!el)return;const items=data.filter(x=>x.category===cat).slice(0,n);el.innerHTML=items.map(x=>`<article class="evidence-card"><img loading="lazy" src="${x.url}" alt="${escapeHtml(x.title)}" onerror="this.style.opacity=.15"><div class="evidence-meta"><small>${labels[cat]}</small><strong>${escapeHtml(x.title)}</strong></div></article>`).join('')}
+  function fillRail(id,cat,n=8){const el=document.getElementById(id);if(!el)return;const items=data.filter(x=>x.category===cat).slice(0,n);el.innerHTML=items.map(x=>`<article class="evidence-card"><img loading="lazy" ${externalImageAttrs(x,x.title,'onerror="window.portfolioImageFallback(this)"')}><div class="evidence-meta"><small>${labels[cat]}</small><strong>${escapeHtml(x.title)}</strong></div></article>`).join('')}
   fillRail('teachingRail','teaching'); fillRail('communityRail','community');
 
   // V6 content registry — compact rows, real images, swipe viewer
@@ -915,8 +941,8 @@ body{background:#f6f9fc}
     const el=document.getElementById(id);if(!el)return;
     const items=[];
     (docs[cat]||[]).forEach(([src,caption])=>items.push({src,caption,type:'document'}));
-    (stripNos[cat]||[]).map(n=>byNo.get(n)).filter(Boolean).forEach(x=>items.push({src:x.url,caption:prettyTitle(x),type:'photo'}));
-    el.innerHTML=items.map((it,i)=>`<button class="content-card ${it.type}" data-view-src="${it.src}" data-view-caption="${escapeHtml(it.caption)}" data-view-index="${i}"><img loading="lazy" src="${it.src}" alt="${escapeHtml(it.caption)}" onerror="this.style.opacity=.15"><span class="content-card-label">${escapeHtml(it.caption)}</span></button>`).join('');
+    (stripNos[cat]||[]).map(n=>byNo.get(n)).filter(Boolean).forEach(x=>items.push({src:x.url,caption:prettyTitle(x),type:'photo',external:x}));
+    el.innerHTML=items.map((it,i)=>`<button class="content-card ${it.type}" data-view-src="${it.src}" data-view-caption="${escapeHtml(it.caption)}" data-view-index="${i}"><img loading="lazy" ${it.external?externalImageAttrs(it.external,it.caption,'onerror="window.portfolioImageFallback(this)"'):`src="${it.src}" alt="${escapeHtml(it.caption)}"`}><span class="content-card-label">${escapeHtml(it.caption)}</span></button>`).join('');
     el.querySelectorAll('.content-card').forEach((card,i)=>card.addEventListener('click',()=>openViewer(items,i)));
   }
   fillContentStrip('aboutStrip','about'); fillContentStrip('teachingStrip','teaching'); fillContentStrip('professionalStrip','professional'); fillContentStrip('communityStrip','community');
@@ -929,13 +955,13 @@ body{background:#f6f9fc}
   });
 
   // Put real photos into the 5 chapter cards and the in-hero menu
-  document.querySelectorAll('.hub-card[data-hub-image]').forEach(card=>{const x=byNo.get(Number(card.dataset.hubImage));if(x){card.querySelector('.hub-media').innerHTML=`<img src="${x.url}" alt="${escapeHtml(prettyTitle(x))}" loading="lazy">`}});
+  document.querySelectorAll('.hub-card[data-hub-image]').forEach(card=>{const x=byNo.get(Number(card.dataset.hubImage));if(x){card.querySelector('.hub-media').innerHTML=`<img ${externalImageAttrs(x,prettyTitle(x),'loading="lazy" onerror="window.portfolioImageFallback(this)"')}>`}});
   const menuImageNos=[34,115,157,145,108];
-  document.querySelectorAll('#revealMenu .reveal-card').forEach((card,i)=>{const x=byNo.get(menuImageNos[i]);if(x){const thumb=document.createElement('div');thumb.className='menu-thumb';thumb.innerHTML=`<img src="${x.url}" alt="" loading="lazy">`;card.prepend(thumb)}});
+  document.querySelectorAll('#revealMenu .reveal-card').forEach((card,i)=>{const x=byNo.get(menuImageNos[i]);if(x){const thumb=document.createElement('div');thumb.className='menu-thumb';thumb.innerHTML=`<img ${externalImageAttrs(x,'','loading="lazy" onerror="window.portfolioImageFallback(this)"')}>`;card.prepend(thumb)}});
 
   // Two real-system screenshots from Sheet registry
-  if(byNo.get(157))document.getElementById('secondarySystemImage').src=byNo.get(157).url;
-  if(byNo.get(158))document.getElementById('primarySystemImage').src=byNo.get(158).url;
+  if(byNo.get(157))applyExternalImage(document.getElementById('secondarySystemImage'),byNo.get(157));
+  if(byNo.get(158))applyExternalImage(document.getElementById('primarySystemImage'),byNo.get(158));
 
   // V5 editorial finishing: next-section links, restrained reveals, active section dock.
   const sectionMeta=[
