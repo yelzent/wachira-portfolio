@@ -718,9 +718,10 @@ body{background:#f6f9fc}
       this.localBar=section.querySelector('.scene-local-progress i');
       this.hint=section.querySelector('.frame-hint');
       this.cache=new Map(); this.pending=new Map();
-      this.current=1; this.target=1; this.lastDrawn=0; this.raf=0;
+      this.queue=[]; this.queued=new Set(); this.activeLoads=0; this.loadSeq=0;
+      this.current=1; this.target=1; this.lastDrawn=0; this.raf=0; this.lastTarget=1;
       this.mode=mobileQuery.matches?'mobile':'desktop';
-      this.total=this.getTotal(); this.maxCache=this.mode==='mobile'?42:28;
+      this.total=this.getTotal(); this.maxCache=this.mode==='mobile'?26:20; this.maxConcurrent=this.mode==='mobile'?3:4;
       this.dpr=Math.min(devicePixelRatio||1,2);
       this.loadFrame(1,true).then(()=>{this.resize();this.preloadWindow(1);this.updateFromScroll()});
     }
@@ -728,7 +729,7 @@ body{background:#f6f9fc}
     framePath(n){return `assets/frames/${this.mode}/${this.key}/${String(n).padStart(4,'0')}.webp`}
     switchMode(){
       const next=mobileQuery.matches?'mobile':'desktop'; if(next===this.mode)return;
-      this.mode=next; this.total=this.getTotal(); this.maxCache=this.mode==='mobile'?42:28;
+      this.mode=next; this.total=this.getTotal(); this.maxCache=this.mode==='mobile'?26:20; this.maxConcurrent=this.mode==='mobile'?3:4;
       this.cache.clear(); this.pending.clear(); this.current=1; this.target=1; this.lastDrawn=0;
       this.loadFrame(1,true).then(()=>{this.resize();this.updateFromScroll()});
     }
@@ -736,12 +737,50 @@ body{background:#f6f9fc}
       n=Math.max(1,Math.min(this.total,n));
       if(this.cache.has(n)){this.touch(n);return Promise.resolve(this.cache.get(n).img)}
       if(this.pending.has(n))return this.pending.get(n);
-      const promise=new Promise(resolve=>{
-        const img=new Image(); img.decoding='async'; if(priority)img.fetchPriority='high';
-        img.onload=()=>{this.pending.delete(n);this.cache.set(n,{img,used:performance.now()});this.evict(n);resolve(img)};
-        img.onerror=()=>{this.pending.delete(n);resolve(null)}; img.src=this.framePath(n);
-      });
-      this.pending.set(n,promise); return promise;
+      let resolvePromise;
+      const promise=new Promise(resolve=>{resolvePromise=resolve});
+      this.pending.set(n,promise);
+      const job={n,priority:!!priority,resolve:resolvePromise,attempt:0,seq:++this.loadSeq};
+      this.enqueue(job);
+      return promise;
+    }
+    enqueue(job){
+      if(this.queued.has(job.n))return;
+      this.queued.add(job.n);
+      this.queue.push(job);
+      this.queue.sort((a,b)=>(Number(b.priority)-Number(a.priority)) || (a.seq-b.seq));
+      this.pumpQueue();
+    }
+    pumpQueue(){
+      while(this.activeLoads<this.maxConcurrent && this.queue.length){
+        const job=this.queue.shift();
+        this.queued.delete(job.n);
+        if(this.cache.has(job.n)){
+          this.pending.delete(job.n); job.resolve(this.cache.get(job.n).img); continue;
+        }
+        this.activeLoads++; this.fetchJob(job);
+      }
+    }
+    fetchJob(job){
+      const img=new Image(); img.decoding='async'; img.referrerPolicy='no-referrer';
+      if(job.priority) img.fetchPriority='high';
+      const done=(ok)=>{
+        this.activeLoads=Math.max(0,this.activeLoads-1);
+        if(ok){
+          this.cache.set(job.n,{img,used:performance.now()}); this.evict(job.n);
+          this.pending.delete(job.n); job.resolve(img);
+        }else if(job.attempt<2){
+          job.attempt++;
+          const delay=job.attempt===1?220:700;
+          setTimeout(()=>{job.seq=++this.loadSeq; this.enqueue(job)},delay);
+        }else{
+          this.pending.delete(job.n); job.resolve(null);
+        }
+        this.pumpQueue();
+      };
+      img.onload=()=>done(true);
+      img.onerror=()=>done(false);
+      img.src=this.framePath(job.n);
     }
     touch(n){const item=this.cache.get(n);if(item)item.used=performance.now()}
     evict(center){
@@ -752,9 +791,16 @@ body{background:#f6f9fc}
       while(this.cache.size>this.maxCache&&entries.length){this.cache.delete(entries.shift()[0])}
     }
     preloadWindow(center){
-      const near=this.mode==='mobile'?13:10; const order=[center];
-      for(let d=1;d<=near;d++){if(center+d<=this.total)order.push(center+d);if(center-d>=1)order.push(center-d)}
-      order.forEach((n,i)=>this.loadFrame(n,i<4));
+      const near=this.mode==='mobile'?5:4;
+      const direction=center>=this.lastTarget?1:-1;
+      const order=[center];
+      for(let d=1;d<=near;d++){
+        const ahead=center+d*direction, behind=center-d*direction;
+        if(ahead>=1&&ahead<=this.total)order.push(ahead);
+        if(behind>=1&&behind<=this.total)order.push(behind);
+      }
+      order.forEach((n,i)=>this.loadFrame(n,i<2));
+      this.lastTarget=center;
     }
     nearestLoaded(n){
       const exact=this.cache.get(n); if(exact){this.touch(n);return exact.img}
@@ -822,14 +868,14 @@ body{background:#f6f9fc}
     }
     startLoop(){
       if(this.raf)return;
-      const tick=()=>{this.raf=0;const diff=this.target-this.current;if(Math.abs(diff)>=1){const step=Math.sign(diff)*Math.max(1,Math.ceil(Math.abs(diff)*.32));this.current=Math.max(1,Math.min(this.total,this.current+step));this.loadFrame(this.current,true).then(()=>this.draw(this.current));this.preloadWindow(this.current);this.raf=requestAnimationFrame(tick)}else{this.current=this.target;this.loadFrame(this.current,true).then(()=>this.draw(this.current))}};
+      const tick=()=>{this.raf=0;const diff=this.target-this.current;if(Math.abs(diff)>=1){const step=Math.sign(diff)*Math.max(1,Math.ceil(Math.abs(diff)*.32));this.current=Math.max(1,Math.min(this.total,this.current+step));this.loadFrame(this.current,true).then(()=>this.draw(this.current));this.raf=requestAnimationFrame(tick)}else{this.current=this.target;this.loadFrame(this.current,true).then(()=>this.draw(this.current))}};
       this.raf=requestAnimationFrame(tick);
     }
   }
 
   const scenes=[...document.querySelectorAll('[data-frame-scene]')].map(el=>new FrameScene(el));
   let ticking=false;
-  function updateAll(){ticking=false;const docH=document.documentElement.scrollHeight-innerHeight;globalProgress.style.width=`${(scrollY/Math.max(1,docH))*100}%`;scenes.forEach(s=>s.updateFromScroll())}
+  function updateAll(){ticking=false;const docH=document.documentElement.scrollHeight-innerHeight;globalProgress.style.width=`${(scrollY/Math.max(1,docH))*100}%`;scenes.forEach(s=>{const r=s.section.getBoundingClientRect();if(r.bottom>-innerHeight*.35&&r.top<innerHeight*1.35)s.updateFromScroll()})}
   addEventListener('scroll',()=>{if(!ticking){ticking=true;requestAnimationFrame(updateAll)}},{passive:true});
   addEventListener('resize',()=>{scenes.forEach(s=>s.resize());if(!ticking){ticking=true;requestAnimationFrame(updateAll)}} ,{passive:true});
   mobileQuery.addEventListener?.('change',()=>{scenes.forEach(s=>s.switchMode());updateAll()});
