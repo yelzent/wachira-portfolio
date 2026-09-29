@@ -5,37 +5,50 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="referrer" content="no-referrer">
 <meta name="theme-color" content="#f7fbff">
-<meta name="portfolio-version" content="12-stable-responsive">
+<meta name="portfolio-version" content="12.1-full-motion-preload-fast-follow">
   <title>Wachira Uthawang — Interactive Teacher Portfolio v12</title>
 <meta name="description" content="Interactive Teacher Portfolio — Wachira Uthawang">
 <link rel="stylesheet" href="styles.css">
+
 <style>
-  /* Motion boot loader: preload only critical Hero frames, not the whole site. */
-  body.motion-loading{overflow:hidden}
-  .motion-boot{position:fixed;inset:0;z-index:99999;display:grid;place-items:center;background:#f7fbff;color:#13202c;transition:opacity .38s ease,visibility .38s ease}
+  /* V12.1 — Full Motion Preload. Gallery/document images remain lazy-loaded. */
+  html.motion-preparing{scroll-behavior:auto}
+  body.motion-loading{overflow:hidden;touch-action:none}
+  .motion-boot{position:fixed;inset:0;z-index:99999;display:grid;place-items:center;background:#f7fbff;color:#13202c;transition:opacity .42s ease,visibility .42s ease}
   .motion-boot.is-ready{opacity:0;visibility:hidden;pointer-events:none}
-  .motion-boot-box{width:min(360px,78vw);text-align:center}
-  .motion-boot-mark{width:54px;height:54px;border-radius:50%;display:grid;place-items:center;margin:0 auto 18px;background:#13202c;color:#fff;font-weight:800;letter-spacing:.06em}
-  .motion-boot-title{font-size:13px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;margin-bottom:9px}
-  .motion-boot-sub{font-size:11px;color:#71808d;margin-bottom:18px}
-  .motion-boot-track{height:3px;border-radius:999px;background:rgba(19,32,44,.10);overflow:hidden}
+  .motion-boot-box{width:min(430px,84vw);text-align:center;padding:24px}
+  .motion-boot-mark{width:58px;height:58px;border-radius:50%;display:grid;place-items:center;margin:0 auto 18px;background:#13202c;color:#fff;font-weight:850;letter-spacing:.06em}
+  .motion-boot-title{font-size:13px;font-weight:850;letter-spacing:.12em;text-transform:uppercase;margin-bottom:7px}
+  .motion-boot-sub{font-size:11px;line-height:1.55;color:#71808d;margin-bottom:19px}
+  .motion-boot-track{height:4px;border-radius:999px;background:rgba(19,32,44,.10);overflow:hidden}
   .motion-boot-track i{display:block;width:100%;height:100%;background:#13202c;transform:scaleX(0);transform-origin:left center;transition:transform .12s linear}
-  .motion-boot-percent{margin-top:9px;font-size:10px;color:#7d8a95;font-variant-numeric:tabular-nums}
+  .motion-boot-row{display:flex;justify-content:space-between;gap:12px;align-items:center;margin-top:10px;font-size:10px;color:#7d8a95;font-variant-numeric:tabular-nums}
+  .motion-boot-status{text-align:left;min-height:1.4em}
+  .motion-boot-percent{font-weight:800;color:#13202c}
+  .motion-boot-scenes{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-top:15px}
+  .motion-boot-scenes span{padding:7px 5px;border:1px solid rgba(19,32,44,.10);border-radius:999px;font-size:9px;letter-spacing:.05em;color:#82909b;background:rgba(255,255,255,.65)}
+  .motion-boot-scenes span.done{color:#13202c;border-color:rgba(19,32,44,.28);font-weight:800}
+  .motion-boot-skip{display:none;margin:17px auto 0;border:0;border-bottom:1px solid currentColor;background:transparent;color:#586874;padding:4px 0;font:inherit;font-size:10px;cursor:pointer}
+  .motion-boot-skip.show{display:inline-block}
+  @media (prefers-reduced-motion:reduce){.motion-boot{transition:none}.motion-boot-track i{transition:none}}
 </style>
 </head>
 <body class="motion-loading">
 <div class="motion-boot" id="motionBoot" aria-live="polite" aria-label="กำลังเตรียมภาพเคลื่อนไหว">
   <div class="motion-boot-box">
     <div class="motion-boot-mark">WU</div>
-    <div class="motion-boot-title">Preparing interactive motion</div>
-    <div class="motion-boot-sub">กำลังเตรียมเฟรมสำคัญสำหรับการเลื่อนที่ลื่นไหล</div>
+    <div class="motion-boot-title">Preparing interactive portfolio</div>
+    <div class="motion-boot-sub">กำลังโหลด Motion Frames ให้พร้อมก่อนเริ่มใช้งาน<br>รูปผลงานและเอกสารจะโหลดภายหลังตามตำแหน่งที่เปิดดู</div>
     <div class="motion-boot-track"><i id="motionBootBar"></i></div>
-    <div class="motion-boot-percent" id="motionBootPercent">0%</div>
+    <div class="motion-boot-row"><span class="motion-boot-status" id="motionBootStatus">Preparing motion…</span><span class="motion-boot-percent" id="motionBootPercent">0%</span></div>
+    <div class="motion-boot-scenes"><span id="bootIntro">INTRO</span><span id="bootReturn">RETURN</span><span id="bootClosing">CLOSING</span></div>
+    <button type="button" class="motion-boot-skip" id="motionBootSkip">เข้าสู่เว็บไซต์ก่อน</button>
   </div>
 </div>
+
 <div class="progress-line" id="progressLine"></div>
 <header class="topbar">
-  <a class="brand" href="#experience"><span class="brand-badge">WU</span><span><strong>WACHIRA UTHAWANG</strong><small>INTERACTIVE TEACHER PORTFOLIO · V12</small></span></a>
+  <a class="brand" href="#experience"><span class="brand-badge">WU</span><span><strong>WACHIRA UTHAWANG</strong><small>INTERACTIVE TEACHER PORTFOLIO · V12.1</small></span></a>
   <nav class="nav-actions" aria-label="เมนูหลัก"><a class="nav-chip" href="#hub">MENU</a><button type="button" class="nav-chip" id="openAllGallery">PHOTO ARCHIVE</button></nav>
 </header>
 <nav class="section-dock" aria-label="Portfolio sections">
@@ -212,18 +225,18 @@
   const globalProgress=document.getElementById('progressLine');
   const manifest=window.FRAME_MANIFEST||{};
 
-  // V12: smooth, time-based frame profiles for Desktop / Tablet / Phone.
+  // V12.1: device-specific decode cache + fast-follow scrub.
   function getDeviceProfile(){
     const w=window.innerWidth||document.documentElement.clientWidth||1200;
     const portrait=(window.innerHeight||0)>w;
     const dpr=window.devicePixelRatio||1;
     if(w<=767){
-      return {name:'phone',asset:'mobile',dpr:Math.min(dpr,1),cache:18,concurrent:2,ahead:4,behind:2,stride:1,smoothing:'medium',activeBefore:.22,activeAfter:.92};
+      return {name:'phone',asset:'mobile',dpr:Math.min(dpr,1),cache:18,concurrent:2,ahead:4,behind:2,stride:1,follow:.54,minStep:2,maxStep:10,smoothing:'medium',preloadConcurrent:3,activeBefore:.24,activeAfter:.96};
     }
     if(w<=1199){
-      return {name:'tablet',asset:portrait?'mobile':'desktop',dpr:Math.min(dpr,1.15),cache:26,concurrent:3,ahead:5,behind:3,stride:1,smoothing:'medium',activeBefore:.32,activeAfter:1.08};
+      return {name:'tablet',asset:portrait?'mobile':'desktop',dpr:Math.min(dpr,1.15),cache:26,concurrent:3,ahead:5,behind:3,stride:1,follow:.58,minStep:3,maxStep:14,smoothing:'medium',preloadConcurrent:4,activeBefore:.34,activeAfter:1.10};
     }
-    return {name:'desktop',asset:'desktop',dpr:Math.min(dpr,1.25),cache:36,concurrent:4,ahead:6,behind:3,stride:1,smoothing:'high',activeBefore:.42,activeAfter:1.22};
+    return {name:'desktop',asset:'desktop',dpr:Math.min(dpr,1.25),cache:36,concurrent:4,ahead:6,behind:3,stride:1,follow:.62,minStep:4,maxStep:18,smoothing:'high',preloadConcurrent:5,activeBefore:.44,activeAfter:1.24};
   }
   function syncDeviceDataset(){document.documentElement.dataset.device=getDeviceProfile().name}
   syncDeviceDataset();
@@ -237,7 +250,7 @@
       this.localBar=section.querySelector('.scene-local-progress i'); this.hint=section.querySelector('.frame-hint');
       this.cache=new Map(); this.pending=new Map(); this.queue=[]; this.queued=new Set();
       this.activeLoads=0; this.loadSeq=0; this.current=1; this.position=1; this.target=1; this.lastDrawn=0; this.lastTarget=1; this.lastFrameRequest=1; this.raf=0; this.lastTick=0;
-      this.booted=false; this.isActive=false; this.warmingUp=false; this.lastCssWidth=0; this.lastCssHeight=0; this.lastProfileKey='';
+      this.booted=false; this.isActive=false; this.lastCssWidth=0; this.lastCssHeight=0; this.lastProfileKey='';
       this.applyProfile(true);
     }
     profileKey(p){return `${p.name}|${p.asset}|${p.dpr}`}
@@ -310,22 +323,8 @@
       const entries=[...this.cache.entries()].sort((a,b)=>{const da=Math.abs(a[0]-center),db=Math.abs(b[0]-center);return da!==db?db-da:a[1].used-b[1].used});
       while(this.cache.size>this.maxCache&&entries.length)this.cache.delete(entries.shift()[0]);
     }
-    trimQueued(center){
-      // Drop stale, not-yet-started jobs when the user scrolls far away.
-      // During the startup warmup we intentionally keep the sparse Hero keyframes.
-      if(this.warmingUp)return;
-      const radius=Math.max(8,(this.profile.ahead+this.profile.behind+2)*(this.profile.stride||1));
-      const keep=[];
-      for(const job of this.queue){
-        if(job.n===center||Math.abs(job.n-center)<=radius){keep.push(job);continue}
-        this.queued.delete(job.n);
-        this.pending.delete(job.n);
-        try{job.resolve(null)}catch(e){}
-      }
-      this.queue=keep;
-    }
     preloadWindow(center){
-      if(!this.isActive)return; center=this.quantize(center); this.trimQueued(center); const direction=center>=this.lastTarget?1:-1, stride=this.profile.stride||1;
+      if(!this.isActive)return; center=this.quantize(center); const direction=center>=this.lastTarget?1:-1, stride=this.profile.stride||1;
       const order=[center];
       for(let d=1;d<=this.profile.ahead;d++){const n=center+d*stride*direction;if(n>=1&&n<=this.total)order.push(n)}
       for(let d=1;d<=this.profile.behind;d++){const n=center-d*stride*direction;if(n>=1&&n<=this.total)order.push(n)}
@@ -379,23 +378,47 @@
       }
     }
     startLoop(){
-      // Direct scrub: scroll position is the source of truth.
-      // Do not ease through intermediate frames; that makes the character lag behind the wheel/finger.
-      if(!this.isActive)return;
-      const frame=this.quantize(this.target);
-      this.position=frame;
-      this.current=frame;
-      this.lastFrameRequest=frame;
+      // V12.1 Fast Follow: close the gap in only a few RAFs instead of easing slowly.
+      // This preserves motion rhythm, but avoids the old "character trails behind the wheel/finger" feeling.
+      if(this.raf||!this.isActive)return;
+      this.lastTick=performance.now();
+      const tick=now=>{
+        this.raf=0;if(!this.isActive)return;
+        this.lastTick=now;
+        const diff=this.target-this.position, distance=Math.abs(diff);
+        if(distance<=.55){
+          this.position=this.target;
+        }else{
+          const dynamic=Math.ceil(distance*(this.profile.follow||.58));
+          const step=Math.min(distance,Math.min(this.profile.maxStep,Math.max(this.profile.minStep,dynamic)));
+          this.position+=Math.sign(diff)*step;
+        }
+        const frame=this.quantize(Math.round(this.position));
+        this.current=frame;
+        this.lastFrameRequest=frame;
 
-      // Draw immediately from cache (or nearest cached frame) so the canvas follows the scroll now.
-      this.draw(frame);
+        // Render from decoded cache immediately; if exact frame is not decoded yet, nearest keyframe prevents a blank canvas.
+        this.draw(frame);
+        if(!this.cache.has(frame)){
+          this.loadFrame(frame,true).then(img=>{
+            if(img&&this.isActive&&this.current===frame)this.draw(frame,true);
+          });
+        }
 
-      // If the exact target is missing, request it at highest priority and replace the temporary frame when ready.
-      if(!this.cache.has(frame)){
-        this.loadFrame(frame,true).then(img=>{
-          if(img&&this.isActive&&this.current===frame)this.draw(frame,true);
-        });
-      }
+        // Decode around the visible frame and also request the true target urgently.
+        this.preloadWindow(frame);
+        const target=this.quantize(this.target);
+        if(!this.cache.has(target))this.loadFrame(target,true);
+
+        if(Math.abs(this.target-this.position)>.55)this.raf=requestAnimationFrame(tick);
+        else{
+          this.position=this.target;
+          this.current=target;
+          this.draw(target);
+          if(!this.cache.has(target))this.loadFrame(target,true).then(img=>{if(img&&this.isActive&&this.current===target)this.draw(target,true)});
+        }
+      };
+      this.raf=requestAnimationFrame(tick);
     }
   }
 
@@ -415,45 +438,103 @@
     },140);
   },{passive:true});
   addEventListener('orientationchange',()=>setTimeout(()=>{lastViewportWidth=window.innerWidth;syncDeviceDataset();scenes.forEach(s=>{s.applyProfile(true);s.resize(true)});scheduleUpdate()},220),{passive:true});
+  // V12.1 — preload every Motion Frame for the current device asset set into the browser HTTP cache.
+  // IMPORTANT: this does NOT retain all decoded bitmaps in JS memory. Only a small moving decode cache is kept by FrameScene.
+  let motionReady=false;
+  const bootUI={
+    root:document.getElementById('motionBoot'),bar:document.getElementById('motionBootBar'),pct:document.getElementById('motionBootPercent'),
+    status:document.getElementById('motionBootStatus'),skip:document.getElementById('motionBootSkip'),
+    intro:document.getElementById('bootIntro'),return:document.getElementById('bootReturn'),closing:document.getElementById('bootClosing')
+  };
+  let skipRequested=false;
+  bootUI.skip?.addEventListener('click',()=>{skipRequested=true;releaseMotionBoot('Loading continues in background…')});
+  setTimeout(()=>bootUI.skip?.classList.add('show'),7000);
 
-  // Hybrid startup preload: prepare a sparse set of key frames across the first Hero scene.
-  // This gives the scrubber nearby decoded frames immediately without forcing the visitor to download the whole animation first.
-  async function warmupCriticalHero(){
-    const loader=document.getElementById('motionBoot');
-    const bar=document.getElementById('motionBootBar');
-    const pct=document.getElementById('motionBootPercent');
-    const hero=scenes.find(s=>s.key==='intro')||scenes[0];
-    if(!hero){loader?.classList.add('is-ready');document.body.classList.remove('motion-loading');return}
-
-    hero.warmingUp=true;
-    hero.setActive(true);
-    hero.boot();
-    const p=getDeviceProfile();
-    const count=p.name==='phone'?16:p.name==='tablet'?20:24;
-    const keys=[];
-    for(let i=0;i<count;i++)keys.push(hero.quantize(1+Math.round((hero.total-1)*(i/(count-1)))));
-    const unique=[...new Set(keys)];
-    let done=0;
-    const updateLoader=()=>{
-      const value=Math.round(done/Math.max(1,unique.length)*100);
-      if(bar)bar.style.transform=`scaleX(${value/100})`;
-      if(pct)pct.textContent=`${value}%`;
-    };
-    updateLoader();
-    const jobs=unique.map(n=>hero.loadFrame(n,true).then(()=>{done++;updateLoader()}));
-
-    // Never trap the user behind the loader on a slow connection.
-    await Promise.race([Promise.all(jobs),new Promise(resolve=>setTimeout(resolve,4500))]);
-    hero.warmingUp=false;
-    hero.trimQueued(hero.target);
-    hero.resize(true);
-    hero.updateFromScroll();
-    scheduleUpdate();
-    if(loader)loader.classList.add('is-ready');
+  function releaseMotionBoot(message='Ready'){
+    if(motionReady)return;motionReady=true;
+    if(bootUI.status)bootUI.status.textContent=message;
+    if(bootUI.bar)bootUI.bar.style.transform='scaleX(1)';
+    if(bootUI.pct)bootUI.pct.textContent='100%';
     document.body.classList.remove('motion-loading');
-    setTimeout(()=>loader?.remove(),500);
+    document.documentElement.classList.remove('motion-preparing');
+    bootUI.root?.classList.add('is-ready');
+    scheduleUpdate();
+    setTimeout(()=>bootUI.root?.remove(),520);
   }
-  warmupCriticalHero();
+
+  function motionUrl(asset,key,n){return `assets/frames/${asset}/${key}/${String(n).padStart(4,'0')}.webp`}
+
+  async function fetchFrameToHttpCache(url,attempt=0){
+    try{
+      if(location.protocol==='file:'){
+        return await new Promise(resolve=>{const img=new Image();img.onload=()=>resolve(true);img.onerror=()=>resolve(false);img.src=url});
+      }
+      const res=await fetch(url,{cache:'force-cache',credentials:'same-origin'});
+      if(!res.ok)throw new Error(`HTTP ${res.status}`);
+      await res.arrayBuffer();
+      return true;
+    }catch(err){
+      if(attempt<2){await new Promise(r=>setTimeout(r,attempt===0?220:650));return fetchFrameToHttpCache(url,attempt+1)}
+      return false;
+    }
+  }
+
+  async function seedDecodedKeyframes(){
+    // Sparse decoded anchors mean nearestLoaded() always has something close while an exact frame decodes.
+    const profile=getDeviceProfile();
+    const counts={phone:{intro:14,return:8,closing:8},tablet:{intro:16,return:10,closing:10},desktop:{intro:18,return:12,closing:12}}[profile.name];
+    for(const scene of scenes){
+      scene.applyProfile(false);
+      const count=Math.min(scene.total,counts[scene.key]||8);
+      const keys=[];
+      for(let i=0;i<count;i++)keys.push(scene.quantize(1+Math.round((scene.total-1)*(i/Math.max(1,count-1)))));
+      for(const n of [...new Set(keys)])await scene.loadFrame(n,true);
+    }
+  }
+
+  async function preloadAllMotion(){
+    document.documentElement.classList.add('motion-preparing');
+    const p=getDeviceProfile(),asset=p.asset;
+    const groups=[
+      {key:'intro',total:Number(manifest[asset]?.intro||0),el:bootUI.intro,label:'Intro'},
+      {key:'return',total:Number(manifest[asset]?.return||0),el:bootUI.return,label:'Return'},
+      {key:'closing',total:Number(manifest[asset]?.closing||0),el:bootUI.closing,label:'Closing'}
+    ].filter(g=>g.total>0);
+    const jobs=[];
+    for(const g of groups)for(let n=1;n<=g.total;n++)jobs.push({g,n,url:motionUrl(asset,g.key,n)});
+    const total=jobs.length;let index=0,done=0,failed=0;
+    const groupDone=new Map(groups.map(g=>[g.key,0]));
+    const update=job=>{
+      done++;if(job){groupDone.set(job.g.key,(groupDone.get(job.g.key)||0)+1);if(groupDone.get(job.g.key)>=job.g.total)job.g.el?.classList.add('done')}
+      const percent=Math.round(done/Math.max(1,total)*100);
+      if(bootUI.bar)bootUI.bar.style.transform=`scaleX(${percent/100})`;
+      if(bootUI.pct)bootUI.pct.textContent=`${percent}%`;
+      if(bootUI.status){
+        const current=job?.g?.label||'Motion';
+        bootUI.status.textContent=`${current} · ${done}/${total}${failed?` · retry ${failed}`:''}`;
+      }
+    };
+    const worker=async()=>{
+      while(index<jobs.length&&!skipRequested){
+        const job=jobs[index++];const ok=await fetchFrameToHttpCache(job.url);if(!ok)failed++;update(job);
+      }
+    };
+    await Promise.all(Array.from({length:Math.min(p.preloadConcurrent||4,total)},worker));
+
+    // If user skipped, remaining files continue quietly with even lower concurrency.
+    if(skipRequested&&index<jobs.length){
+      const background=async()=>{while(index<jobs.length){const job=jobs[index++];await fetchFrameToHttpCache(job.url);}};
+      Promise.all([background(),background()]).catch(()=>{});
+      return;
+    }
+
+    if(bootUI.status)bootUI.status.textContent=failed?`Network ready · ${failed} frame(s) will retry on demand`:'Network ready · decoding key frames…';
+    await seedDecodedKeyframes();
+    for(const g of groups)g.el?.classList.add('done');
+    releaseMotionBoot(failed?'Ready · missing frames retry automatically':'Ready');
+  }
+
+  preloadAllMotion().catch(()=>releaseMotionBoot('Ready · motion will continue loading'));
 
   // Preview helpers for testing: ?preview=intro-name | intro-menu | return | closing
   const preview=new URLSearchParams(location.search).get('preview');
